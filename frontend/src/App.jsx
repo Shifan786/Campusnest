@@ -19,6 +19,8 @@ import FacultyMarks from './pages/faculty/FacultyMarks';
 import StudentDashboard from './pages/student/StudentDashboard';
 import StudentAttendance from './pages/student/StudentAttendance';
 import StudentMarks from './pages/student/StudentMarks';
+import StudentMaterials from './pages/student/StudentMaterials';
+import FacultyMaterials from './pages/faculty/FacultyMaterials';
 import SettingsPage from './pages/Settings';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -94,7 +96,12 @@ const App = () => {
                             <FacultyMarks />
                         </ProtectedRoute>
                     } />
-
+                    <Route path="/faculty/materials" element={
+                        <ProtectedRoute allowedRoles={['Faculty', 'Admin']}>
+                            <FacultyMaterials />
+                        </ProtectedRoute>
+                    } />
+                    
                     <Route path="/student" element={
                         <ProtectedRoute allowedRoles={['Student', 'Admin']}>
                             <StudentDashboard />
@@ -108,6 +115,11 @@ const App = () => {
                     <Route path="/student/marks" element={
                         <ProtectedRoute allowedRoles={['Student', 'Admin']}>
                             <StudentMarks />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/student/materials" element={
+                        <ProtectedRoute allowedRoles={['Student', 'Admin']}>
+                            <StudentMaterials />
                         </ProtectedRoute>
                     } />
 

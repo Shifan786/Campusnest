@@ -176,13 +176,14 @@ const getCourses = async (req, res) => {
 
 const createSubject = async (req, res) => {
     try {
-        const { name, code, course, semester } = req.body;
+        const { name, code, course, semester, timing } = req.body;
         const subject = new Subject({ 
             name, 
             code, 
             course, 
             faculty: req.user._id, 
-            semester 
+            semester,
+            timing: timing || "TBD"
         });
         const createdSubject = await subject.save();
         res.status(201).json(createdSubject);
@@ -191,4 +192,17 @@ const createSubject = async (req, res) => {
     }
 };
 
-module.exports = { getAssignedSubjects, getStudentsByCourse, markAttendance, uploadMarks, markBulkAttendance, getDashboardStats, getNotices, getAvailableSubjects, claimSubject, getCourses, createSubject };
+const deleteSubject = async (req, res) => {
+    try {
+        const subject = await Subject.findById(req.params.id);
+        if (!subject) {
+            return res.status(404).json({ message: 'Subject not found' });
+        }
+        await Subject.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Subject deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { getAssignedSubjects, getStudentsByCourse, markAttendance, uploadMarks, markBulkAttendance, getDashboardStats, getNotices, getAvailableSubjects, claimSubject, getCourses, createSubject, deleteSubject };

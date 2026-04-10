@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
 import axios from 'axios';
-import { BookPlus, PlusCircle, CheckCircle2, X } from 'lucide-react';
+import { BookPlus, PlusCircle, CheckCircle2, X, Trash2 } from 'lucide-react';
 
 const FacultyAvailableClasses = () => {
     const [availableSubjects, setAvailableSubjects] = useState([]);
     const [courses, setCourses] = useState([]);
     const [message, setMessage] = useState('');
     const [showModal, setShowModal] = useState(false);
-    const [newSubject, setNewSubject] = useState({ name: '', code: '', course: '', semester: '' });
+    const [newSubject, setNewSubject] = useState({ name: '', code: '', course: '', semester: '', timing: '' });
 
     const fetchAvailable = async () => {
         try {
@@ -51,6 +51,20 @@ const FacultyAvailableClasses = () => {
         }
     };
 
+    const handleDeleteSubject = async (subjectId) => {
+        if (!window.confirm("Are you sure you want to permanently delete this available class?")) return;
+        try {
+            const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            await axios.delete(`http://localhost:5000/api/faculty/subjects/${subjectId}`, config);
+            setMessage('Subject deleted successfully!');
+            setTimeout(() => setMessage(''), 3000);
+            fetchAvailable();
+        } catch (error) {
+            alert(error.response?.data?.message || 'Failed to delete class');
+        }
+    };
+
     const handleCreateSubject = async (e) => {
         e.preventDefault();
         try {
@@ -60,7 +74,7 @@ const FacultyAvailableClasses = () => {
             setMessage('New class created and claimed successfully!');
             setTimeout(() => setMessage(''), 3000);
             setShowModal(false);
-            setNewSubject({ name: '', code: '', course: courses.length > 0 ? courses[0]._id : '', semester: '' });
+            setNewSubject({ name: '', code: '', course: courses.length > 0 ? courses[0]._id : '', semester: '', timing: '' });
         } catch (error) {
             alert(error.response?.data?.message || 'Failed to create new class');
         }
@@ -106,13 +120,23 @@ const FacultyAvailableClasses = () => {
                                 <div className="text-sm">
                                     <p className="text-slate-500 font-medium">Course: <span className="font-bold text-slate-800 dark:text-slate-200">{subject.course?.name || 'N/A'}</span></p>
                                     <p className="text-slate-500 font-medium mt-1">Semester: <span className="font-bold text-slate-800 dark:text-slate-200">{subject.semester || 'N/A'}</span></p>
+                                    <p className="text-slate-500 font-medium mt-1">Timing: <span className="font-bold text-slate-800 dark:text-slate-200">{subject.timing || 'TBD'}</span></p>
                                 </div>
-                                <button 
-                                    onClick={() => handleClaim(subject._id)}
-                                    className="btn-primary py-2.5 px-6 shadow-indigo-500/20 shadow-md font-bold shrink-0"
-                                >
-                                    Claim
-                                </button>
+                                <div className="flex space-x-3">
+                                    <button 
+                                        onClick={() => handleDeleteSubject(subject._id)}
+                                        className="p-2.5 rounded-xl bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors shadow-sm"
+                                        title="Delete Class"
+                                    >
+                                        <Trash2 className="w-5 h-5"/>
+                                    </button>
+                                    <button 
+                                        onClick={() => handleClaim(subject._id)}
+                                        className="btn-primary py-2.5 px-6 shadow-indigo-500/20 shadow-md font-bold shrink-0"
+                                    >
+                                        Claim
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))
@@ -145,6 +169,10 @@ const FacultyAvailableClasses = () => {
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Semester</label>
                                 <input type="number" min="1" max="10" required value={newSubject.semester} onChange={e => setNewSubject({...newSubject, semester: e.target.value})} className="w-full p-2.5 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-transparent dark:text-white" placeholder="1-8" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Timing</label>
+                                <input type="text" required value={newSubject.timing} onChange={e => setNewSubject({...newSubject, timing: e.target.value})} className="w-full p-2.5 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-transparent dark:text-white" placeholder="e.g. Mon, Wed 10:00 AM - 11:30 AM" />
                             </div>
                             <div className="pt-4 flex justify-end space-x-3">
                                 <button type="button" onClick={() => setShowModal(false)} className="px-5 py-2.5 text-slate-600 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition">Cancel</button>

@@ -70,12 +70,14 @@ const DashboardLayout = ({ children, title, subtitle }) => {
                     { name: 'My Classes', icon: Users, path: '/faculty/classes' },
                     { name: 'Attendance', icon: Clock, path: '/faculty/attendance' },
                     { name: 'Marks', icon: FileText, path: '/faculty/marks' },
+                    { name: 'Study Materials', icon: FileText, path: '/faculty/materials' },
                 ];
             case 'Student':
                 return [
                     { name: 'Dashboard', icon: LayoutDashboard, path: '/student' },
                     { name: 'Attendance', icon: Clock, path: '/student/attendance' },
                     { name: 'Marks', icon: FileText, path: '/student/marks' },
+                    { name: 'Study Materials', icon: BookOpen, path: '/student/materials' },
                 ];
             default: return [];
         }

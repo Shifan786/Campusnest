@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAssignedSubjects, markAttendance, uploadMarks, getStudentsByCourse, markBulkAttendance, getDashboardStats, getNotices, getAvailableSubjects, claimSubject, getCourses, createSubject } = require('../controllers/facultyController');
+const { getAssignedSubjects, getStudentsByCourse, markAttendance, uploadMarks, markBulkAttendance, getDashboardStats, getNotices, getAvailableSubjects, claimSubject, getCourses, createSubject, deleteSubject } = require('../controllers/facultyController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
 // All faculty routes are protected and restricted to Faculty/Admin
@@ -11,6 +11,7 @@ router.route('/dashboard-stats').get(getDashboardStats);
 router.route('/notices').get(getNotices);
 router.route('/courses').get(getCourses);
 router.route('/subjects').get(getAssignedSubjects).post(createSubject);
+router.route('/subjects/:id').delete(deleteSubject);
 router.route('/available-subjects').get(getAvailableSubjects);
 router.route('/subjects/:id/claim').put(claimSubject);
 router.route('/attendance').post(markAttendance);

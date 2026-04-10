@@ -2,24 +2,55 @@ import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Users, BookOpen, Clock, FileText, CheckCircle2 } from 'lucide-react';
+import { Users, BookOpen, Clock, FileText, CheckCircle2, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const FacultyDashboard = () => {
     const [stats, setStats] = useState(null);
+    const [schedule, setSchedule] = useState([]);
+
+    const handleDeleteSubject = async (subjectId) => {
+        if (!window.confirm("Are you sure you want to permanently delete this class from your schedule?")) return;
+        try {
+            const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            await axios.delete(`http://localhost:5000/api/faculty/subjects/${subjectId}`, config);
+            setSchedule(prev => prev.filter(s => s._id !== subjectId));
+            
+            const { data: statsData } = await axios.get('http://localhost:5000/api/faculty/dashboard-stats', config);
+            setStats(statsData);
+        } catch (error) {
+            alert(error.response?.data?.message || 'Failed to delete class');
+        }
+    };
 
     useEffect(() => {
-        const fetchStats = async () => {
+        const fetchData = async () => {
             try {
                 const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                const { data } = await axios.get('http://localhost:5000/api/faculty/dashboard-stats', config);
-                setStats(data);
+                
+                const { data: statsData } = await axios.get('http://localhost:5000/api/faculty/dashboard-stats', config);
+                setStats(statsData);
+
+                const { data: subjectsData } = await axios.get('http://localhost:5000/api/faculty/subjects', config);
+                const formattedSchedule = subjectsData.map((sub) => {
+                    return {
+                        _id: sub._id,
+                        title: `${sub.code} ${sub.name}`,
+                        time: sub.timing || "TBD",
+                        status: "Upcoming"
+                    };
+                });
+                
+                setSchedule(formattedSchedule.length > 0 ? formattedSchedule : [
+                    { title: 'No classes scheduled today', time: '--:--', status: 'Upcoming' }
+                ]);
             } catch (error) {
                 console.error(error);
             }
         };
-        fetchStats();
+        fetchData();
     }, []);
 
     const cards = [
@@ -27,12 +58,6 @@ const FacultyDashboard = () => {
         { title: 'Total Enrolled', value: stats?.totalStudents || 0, icon: Users, color: 'bg-blue-500', shadow: 'shadow-blue-500/30' },
         { title: 'Classes Conducted', value: stats?.classesConducted || 0, icon: Clock, color: 'bg-emerald-500', shadow: 'shadow-emerald-500/30' },
         { title: 'Pending Marks', value: stats?.pendingMarks || 0, icon: FileText, color: 'bg-rose-500', shadow: 'shadow-rose-500/30' },
-    ];
-
-    const timeline = [
-        { title: 'CS101 Intro to Programming', time: '10:00 AM - 11:30 AM', status: 'Completed' },
-        { title: 'CS204 Data Structures', time: '01:00 PM - 02:30 PM', status: 'Upcoming' },
-        { title: 'CS301 Machine Learning', time: '03:00 PM - 04:30 PM', status: 'Upcoming' }
     ];
 
     return (
@@ -63,7 +88,7 @@ const FacultyDashboard = () => {
                         <Clock className="w-6 h-6 mr-3 text-indigo-500" /> Today's Schedule
                     </h2>
                     <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 dark:before:via-slate-700 before:to-transparent">
-                        {timeline.map((item, idx) => (
+                        {schedule.map((item, idx) => (
                             <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                                 <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white dark:border-slate-900 bg-slate-100 dark:bg-slate-700 text-slate-500 group-[.is-active]:bg-indigo-500 group-[.is-active]:text-indigo-50 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-colors">
                                     {item.status === 'Completed' ? <CheckCircle2 className="w-5 h-5 text-emerald-400 dark:text-emerald-300" /> : <Clock className="w-5 h-5" />}
@@ -71,6 +96,15 @@ const FacultyDashboard = () => {
                                 <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 shadow-sm hover:shadow-md transition-all">
                                     <div className="flex items-center justify-between mb-2">
                                         <h3 className="font-extrabold text-slate-900 dark:text-white text-lg tracking-tight">{item.title}</h3>
+                                        {item._id && (
+                                            <button 
+                                                onClick={() => handleDeleteSubject(item._id)}
+                                                className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
+                                                title="Delete Class"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        )}
                                     </div>
                                     <div className="text-slate-500 dark:text-slate-400 text-sm font-bold tracking-wide">{item.time}</div>
                                 </div>
