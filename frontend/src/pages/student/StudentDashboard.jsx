@@ -3,11 +3,12 @@ import DashboardLayout from '../../components/DashboardLayout';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { Bell, FileText, CheckCircle2, Clock, BookOpen, XCircle } from 'lucide-react';
+import { Bell, FileText, CheckCircle2, Clock, BookOpen, XCircle, CalendarDays } from 'lucide-react';
 
 const StudentDashboard = () => {
     const [stats, setStats] = useState(null);
     const [notices, setNotices] = useState([]);
+    const [timetable, setTimetable] = useState([]);
     
     const [enrollmentData, setEnrollmentData] = useState({ status: 'Loading', course: null });
     const [courses, setCourses] = useState([]);
@@ -29,6 +30,9 @@ const StudentDashboard = () => {
                     
                     const noticeRes = await axios.get('http://localhost:5000/api/student/notices', config);
                     setNotices(noticeRes.data.slice(0, 5));
+                    
+                    const timetableRes = await axios.get('http://localhost:5000/api/student/timetable', config);
+                    setTimetable(timetableRes.data);
                 } else if (statusRes.data.enrollmentStatus === 'None' || statusRes.data.enrollmentStatus === 'Rejected') {
                     const coursesRes = await axios.get('http://localhost:5000/api/student/courses', config);
                     setCourses(coursesRes.data);
@@ -161,26 +165,62 @@ const StudentDashboard = () => {
                 </motion.div>
             </div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="card-base p-6 lg:p-8">
-                <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center"><Bell className="w-6 h-6 mr-3 text-indigo-500" /> Recent Digital Notices</h2>
-                    <span className="px-4 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs font-bold rounded-full shadow-sm border border-indigo-100 dark:border-indigo-800">New</span>
-                </div>
-                
-                <div className="space-y-5">
-                    {notices.map((notice) => (
-                        <div key={notice._id} className="p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all">
-                            <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 gap-2">
-                                <h3 className="font-extrabold text-slate-900 dark:text-white text-lg tracking-tight">{notice.title}</h3>
-                                <div className="flex items-center text-xs font-bold text-slate-500 tracking-wide bg-white dark:bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm w-fit">
-                                    {new Date(notice.createdAt).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric'})}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="card-base p-6 lg:p-8">
+                    <div className="flex items-center justify-between mb-8">
+                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center"><Bell className="w-6 h-6 mr-3 text-indigo-500" /> Recent Digital Notices</h2>
+                        <span className="px-4 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs font-bold rounded-full shadow-sm border border-indigo-100 dark:border-indigo-800">New</span>
+                    </div>
+                    
+                    <div className="space-y-5">
+                        {notices.map((notice) => (
+                            <div key={notice._id} className="p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all">
+                                <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 gap-2">
+                                    <h3 className="font-extrabold text-slate-900 dark:text-white text-lg tracking-tight">{notice.title}</h3>
+                                    <div className="flex items-center text-xs font-bold text-slate-500 tracking-wide bg-white dark:bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm w-fit">
+                                        {new Date(notice.createdAt).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric'})}
+                                    </div>
                                 </div>
+                                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{notice.content}</p>
                             </div>
-                            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{notice.content}</p>
-                        </div>
-                    ))}
-                </div>
-            </motion.div>
+                        ))}
+                        {notices.length === 0 && <p className="text-slate-500 text-center py-4 font-medium">No new notices.</p>}
+                    </div>
+                </motion.div>
+
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="card-base p-6 lg:p-8">
+                    <div className="flex items-center justify-between mb-8">
+                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center"><CalendarDays className="w-6 h-6 mr-3 text-emerald-500" /> Today's Timetable</h2>
+                        <span className="px-4 py-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold rounded-full shadow-sm border border-emerald-100 dark:border-emerald-800">Live</span>
+                    </div>
+                    
+                    <div className="space-y-4">
+                        {timetable.length > 0 ? (
+                            timetable.map((subject, index) => (
+                                <div key={subject._id || index} className="flex flex-col sm:flex-row gap-4 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800/40 hover:shadow-lg transition-all group">
+                                    <div className="flex flex-col justify-center items-center p-3 bg-slate-50 dark:bg-slate-800 rounded-xl min-w-[100px] border border-slate-100 dark:border-slate-700">
+                                        <Clock className="w-5 h-5 text-slate-400 mb-1" />
+                                        <span className="text-xs font-bold text-slate-600 dark:text-slate-300 text-center">{subject.timing || 'TBD'}</span>
+                                    </div>
+                                    <div className="flex flex-col justify-center flex-1">
+                                        <h3 className="font-extrabold text-slate-900 dark:text-white text-lg">{subject.name}</h3>
+                                        <div className="flex items-center text-sm font-medium text-slate-500 mt-1">
+                                            <span className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-md text-xs mr-2">{subject.code}</span>
+                                            {subject.faculty?.name ? `Prof. ${subject.faculty.name}` : 'Faculty Pending'}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="flex flex-col items-center justify-center p-8 bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 rounded-2xl">
+                                <CalendarDays className="w-12 h-12 text-slate-300 dark:text-slate-600 mb-4" />
+                                <h3 className="text-lg font-bold text-slate-500 mb-1">No Classes Scheduled</h3>
+                                <p className="text-sm text-slate-400 font-medium">Enjoy your day off or use the time to study.</p>
+                            </div>
+                        )}
+                    </div>
+                </motion.div>
+            </div>
         </DashboardLayout>
     );
 };

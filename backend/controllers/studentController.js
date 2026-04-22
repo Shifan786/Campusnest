@@ -85,4 +85,19 @@ const getEnrollmentStatus = async (req, res) => {
     }
 };
 
-module.exports = { getGrades, getAttendance, getNotices, getDashboardStats, getAvailableCourses, submitEnrollment, getEnrollmentStatus };
+const getTimetable = async (req, res) => {
+    try {
+        const Subject = require('../models/Subject');
+        if (!req.user.course) {
+            return res.json([]);
+        }
+        const timetable = await Subject.find({ course: req.user.course })
+            .populate('faculty', 'name')
+            .sort('timing');
+        res.json(timetable);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { getGrades, getAttendance, getNotices, getDashboardStats, getAvailableCourses, submitEnrollment, getEnrollmentStatus, getTimetable };
