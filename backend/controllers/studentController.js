@@ -15,7 +15,10 @@ const getGrades = async (req, res) => {
 // @route   GET /api/student/attendance
 // @access  Private/Student
 const getAttendance = async (req, res) => {
-    const attendance = await Attendance.find({ student: req.user._id }).populate('subject').sort('-date');
+    const attendance = await Attendance.find({ student: req.user._id })
+        .populate('subject')
+        .populate('faculty', 'name')
+        .sort('-date');
     res.json(attendance);
 };
 
@@ -44,7 +47,14 @@ const getDashboardStats = async (req, res) => {
             averageMarks = Math.round(sum / marks.length);
         }
 
-        res.json({ totalClasses, attended, averageMarks });
+        const allMarks = await Marks.find({});
+        let classAverage = 0;
+        if (allMarks.length > 0) {
+            const sumAll = allMarks.reduce((acc, curr) => acc + (curr.marksObtained / curr.totalMarks) * 100, 0);
+            classAverage = Math.round(sumAll / allMarks.length);
+        }
+
+        res.json({ totalClasses, attended, averageMarks, classAverage });
     } catch (e) {
         res.status(500).json({ message: e.message });
     }

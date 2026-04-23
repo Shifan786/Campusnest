@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { Bell, FileText, CheckCircle2, Clock, BookOpen, XCircle, CalendarDays } from 'lucide-react';
 
@@ -121,27 +122,31 @@ const StudentDashboard = () => {
     return (
         <DashboardLayout title="Student Hub" subtitle="Your academic performance and university updates">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-2">
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="card-base p-8 flex flex-col items-center justify-center relative overflow-hidden group col-span-1 md:col-span-2 lg:col-span-1 border-indigo-200 dark:border-indigo-900 bg-indigo-50/80 dark:bg-indigo-900/10">
-                    <div className="text-center w-full relative z-10">
-                        <h3 className="text-sm font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-3">Attendance</h3>
-                        <div className="flex items-end justify-center">
-                            <span className="text-6xl font-black text-slate-800 dark:text-white tracking-tighter">{attendanceRate}</span>
-                            <span className="text-2xl font-bold text-slate-500 mb-1.5 ml-1">%</span>
+                <Link to="/student/attendance" className="col-span-1 md:col-span-2 lg:col-span-1 block h-full">
+                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="card-base card-hover p-8 flex flex-col items-center justify-center relative overflow-hidden group h-full border-indigo-200 dark:border-indigo-900 bg-indigo-50/80 dark:bg-indigo-900/10 cursor-pointer">
+                        <div className="text-center w-full relative z-10">
+                            <h3 className="text-sm font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-3">Attendance</h3>
+                            <div className="flex items-end justify-center">
+                                <span className="text-6xl font-black text-slate-800 dark:text-white tracking-tighter">{attendanceRate}</span>
+                                <span className="text-2xl font-bold text-slate-500 mb-1.5 ml-1">%</span>
+                            </div>
+                            <p className="text-sm text-slate-500 mt-3 font-semibold">{stats?.attended} of {stats?.totalClasses} completed</p>
                         </div>
-                        <p className="text-sm text-slate-500 mt-3 font-semibold">{stats?.attended} of {stats?.totalClasses} completed</p>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                </Link>
 
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="card-base p-8 relative overflow-hidden group">
-                    <div className="flex justify-between items-start mb-6">
-                        <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Average Marks</h3>
-                        <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-2xl shadow-sm"><FileText className="w-6 h-6" /></div>
-                    </div>
-                    <div>
-                        <span className="text-5xl font-black text-slate-800 dark:text-white tracking-tight">{stats?.averageMarks}%</span>
-                        <p className="text-sm text-emerald-600 font-bold mt-4 flex items-center bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1.5 rounded-xl w-fit"><CheckCircle2 className="w-4 h-4 mr-1.5" /> Class Average: 71%</p>
-                    </div>
-                </motion.div>
+                <Link to="/student/marks" className="block h-full">
+                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="card-base card-hover p-8 relative overflow-hidden group h-full cursor-pointer">
+                        <div className="flex justify-between items-start mb-6">
+                            <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Average Marks</h3>
+                            <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-2xl shadow-sm"><FileText className="w-6 h-6" /></div>
+                        </div>
+                        <div>
+                            <span className="text-5xl font-black text-slate-800 dark:text-white tracking-tight">{stats?.averageMarks}%</span>
+                            <p className="text-sm text-emerald-600 font-bold mt-4 flex items-center bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1.5 rounded-xl w-fit"><CheckCircle2 className="w-4 h-4 mr-1.5" /> Class Average: {stats?.classAverage || 0}%</p>
+                        </div>
+                    </motion.div>
+                </Link>
 
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="card-base p-8 lg:col-span-2">
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Overall Performance breakdown</h2>

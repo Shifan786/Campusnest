@@ -47,20 +47,26 @@ const StudentMarks = () => {
                             <tr><td colSpan="5" className="px-6 py-4 text-center text-gray-500">No examination records found.</td></tr>
                         ) : (
                             marks.map((record) => {
-                                const percentage = Math.round((record.marksObtained / record.totalMarks) * 100);
+                                const percentage = record.isAbsent ? 0 : Math.round((record.marksObtained / record.totalMarks) * 100);
                                 return (
                                     <tr key={record._id}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{record.examName}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.subject?.name}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">{record.marksObtained}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">{record.isAbsent ? 'Absent' : record.marksObtained}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.totalMarks}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                                                percentage >= 75 ? 'bg-green-100 text-green-800' :
-                                                percentage >= 40 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
-                                            }`}>
-                                                {percentage}%
-                                            </span>
+                                            {record.isAbsent ? (
+                                                <span className="px-2 py-1 text-xs rounded-full font-medium bg-gray-100 text-gray-800">
+                                                    N/A
+                                                </span>
+                                            ) : (
+                                                <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                                                    percentage >= 75 ? 'bg-green-100 text-green-800' :
+                                                    percentage >= 40 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
+                                                }`}>
+                                                    {percentage}%
+                                                </span>
+                                            )}
                                         </td>
                                     </tr>
                                 );

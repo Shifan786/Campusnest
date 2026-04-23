@@ -53,7 +53,7 @@ const AdminCourses = () => {
                         <form onSubmit={handleCreate} className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Course Name</label>
-                                <input type="text" required value={name} onChange={e => setName(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="e.g. B.Tech Computer Science" />
+                                <input type="text" required value={name} onChange={e => setName(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="e.g. Bca" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Duration</label>

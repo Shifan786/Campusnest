@@ -63,16 +63,111 @@ const markAttendance = async (req, res) => {
 // @access  Private
 const uploadMarks = async (req, res) => {
     try {
-        const { studentId, subjectId, examName, marksObtained, totalMarks } = req.body;
+        const { studentId, subjectId, examName, marksObtained, totalMarks, isAbsent } = req.body;
+
+        if (!isAbsent && Number(marksObtained) > Number(totalMarks)) {
+            return res.status(400).json({ message: 'Marks obtained cannot be greater than total marks' });
+        }
+
+        let existingMarks = await Marks.findOne({
+            student: studentId,
+            subject: subjectId,
+            examName: examName
+        });
+
+        if (existingMarks) {
+            if (!existingMarks.isAbsent) {
+                return res.status(400).json({ message: 'Marks for this exam have already been uploaded for this student.' });
+            } else {
+                existingMarks.marksObtained = isAbsent ? 0 : Number(marksObtained);
+                existingMarks.totalMarks = Number(totalMarks) || existingMarks.totalMarks;
+                existingMarks.isAbsent = isAbsent || false;
+                existingMarks.faculty = req.user._id;
+                await existingMarks.save();
+                return res.status(200).json(existingMarks);
+            }
+        }
+
         const marks = await Marks.create({
             student: studentId,
             subject: subjectId,
             faculty: req.user._id,
             examName,
-            marksObtained,
-            totalMarks
+            marksObtained: isAbsent ? 0 : marksObtained,
+            totalMarks,
+            isAbsent: isAbsent || false
         });
         res.status(201).json(marks);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Get marks uploaded by faculty
+// @route   GET /api/faculty/marks
+// @access  Private
+const getUploadedMarks = async (req, res) => {
+    try {
+        const marks = await Marks.find({ faculty: req.user._id })
+            .populate('student', 'name email')
+            .populate('subject', 'name code')
+            .sort('-date');
+        res.json(marks);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Update marks for a student
+// @route   PUT /api/faculty/marks/:id
+// @access  Private
+const updateMarks = async (req, res) => {
+    try {
+        const { marksObtained, totalMarks, isAbsent } = req.body;
+
+        if (!isAbsent && Number(marksObtained) > Number(totalMarks)) {
+            return res.status(400).json({ message: 'Marks obtained cannot be greater than total marks' });
+        }
+
+        const mark = await Marks.findById(req.params.id);
+
+        if (!mark) {
+            return res.status(404).json({ message: 'Marks not found' });
+        }
+
+        // Make sure only the faculty who uploaded it can edit it
+        if (mark.faculty.toString() !== req.user._id.toString()) {
+            return res.status(401).json({ message: 'Not authorized to edit these marks' });
+        }
+
+        mark.marksObtained = isAbsent ? 0 : Number(marksObtained);
+        mark.totalMarks = Number(totalMarks) || mark.totalMarks;
+        mark.isAbsent = isAbsent || false;
+
+        await mark.save();
+        res.json(mark);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Delete marks
+// @route   DELETE /api/faculty/marks/:id
+// @access  Private
+const deleteMarks = async (req, res) => {
+    try {
+        const mark = await Marks.findById(req.params.id);
+
+        if (!mark) {
+            return res.status(404).json({ message: 'Marks not found' });
+        }
+
+        if (mark.faculty.toString() !== req.user._id.toString() && req.user.role !== 'Admin') {
+            return res.status(401).json({ message: 'Not authorized to delete these marks' });
+        }
+
+        await Marks.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Marks deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -84,6 +179,16 @@ const uploadMarks = async (req, res) => {
 const markBulkAttendance = async (req, res) => {
     try {
         const { subjectId, date, records } = req.body;
+        
+        // Check if attendance is already marked for this subject and date
+        const existingAttendance = await Attendance.findOne({
+            subject: subjectId,
+            date: new Date(date)
+        });
+
+        if (existingAttendance) {
+            return res.status(400).json({ message: 'Attendance for this subject on this date has already been marked.' });
+        }
         
         const promises = records.map(async (record) => {
             let att = await Attendance.findOne({
@@ -123,7 +228,16 @@ const getDashboardStats = async (req, res) => {
         const User = require('../models/User');
         const totalStudents = await User.countDocuments({ role: 'Student' });
 
-        res.json({ assignedSubjects, totalStudents, classesConducted: 12, pendingMarks: 0 });
+        const Attendance = require('../models/Attendance');
+        const classesConducted = (await Attendance.aggregate([
+            { $match: { faculty: facultyId } },
+            { $group: { _id: { date: "$date", subject: "$subject" } } }
+        ])).length;
+
+        const Marks = require('../models/Marks');
+        const marksUploaded = await Marks.countDocuments({ faculty: facultyId });
+
+        res.json({ assignedSubjects, totalStudents, classesConducted, marksUploaded });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -205,4 +319,4 @@ const deleteSubject = async (req, res) => {
     }
 };
 
-module.exports = { getAssignedSubjects, getStudentsByCourse, markAttendance, uploadMarks, markBulkAttendance, getDashboardStats, getNotices, getAvailableSubjects, claimSubject, getCourses, createSubject, deleteSubject };
+module.exports = { getAssignedSubjects, getStudentsByCourse, markAttendance, uploadMarks, getUploadedMarks, updateMarks, deleteMarks, markBulkAttendance, getDashboardStats, getNotices, getAvailableSubjects, claimSubject, getCourses, createSubject, deleteSubject };

@@ -26,6 +26,8 @@ const userSchema = new mongoose.Schema({
     enrollmentStatus: { type: String, enum: ['None', 'Pending', 'Approved', 'Rejected'], default: 'None' },
     employeeId: { type: String }, // For Faculty
     department: { type: String }, 
+    resetPasswordOTP: { type: String },
+    resetPasswordExpires: { type: Date }
 }, {
     timestamps: true
 });

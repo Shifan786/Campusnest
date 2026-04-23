@@ -8,7 +8,10 @@ const FacultyAvailableClasses = () => {
     const [courses, setCourses] = useState([]);
     const [message, setMessage] = useState('');
     const [showModal, setShowModal] = useState(false);
-    const [newSubject, setNewSubject] = useState({ name: '', code: '', course: '', semester: '', timing: '' });
+    const [newSubject, setNewSubject] = useState({ name: '', code: '', course: '', semester: '' });
+    const [timingDay, setTimingDay] = useState('Monday');
+    const [timingStart, setTimingStart] = useState('');
+    const [timingEnd, setTimingEnd] = useState('');
 
     const fetchAvailable = async () => {
         try {
@@ -70,11 +73,13 @@ const FacultyAvailableClasses = () => {
         try {
             const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.post('http://localhost:5000/api/faculty/subjects', newSubject, config);
+            const payload = { ...newSubject, timing: `${timingDay} ${timingStart} - ${timingEnd}` };
+            await axios.post('http://localhost:5000/api/faculty/subjects', payload, config);
             setMessage('New class created and claimed successfully!');
             setTimeout(() => setMessage(''), 3000);
             setShowModal(false);
-            setNewSubject({ name: '', code: '', course: courses.length > 0 ? courses[0]._id : '', semester: '', timing: '' });
+            setNewSubject({ name: '', code: '', course: courses.length > 0 ? courses[0]._id : '', semester: '' });
+            setTimingDay('Monday'); setTimingStart(''); setTimingEnd('');
         } catch (error) {
             alert(error.response?.data?.message || 'Failed to create new class');
         }
@@ -171,8 +176,20 @@ const FacultyAvailableClasses = () => {
                                 <input type="number" min="1" max="10" required value={newSubject.semester} onChange={e => setNewSubject({...newSubject, semester: e.target.value})} className="w-full p-2.5 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-transparent dark:text-white" placeholder="1-8" />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Timing</label>
-                                <input type="text" required value={newSubject.timing} onChange={e => setNewSubject({...newSubject, timing: e.target.value})} className="w-full p-2.5 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-transparent dark:text-white" placeholder="e.g. Mon, Wed 10:00 AM - 11:30 AM" />
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Class Schedule</label>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                    <select required value={timingDay} onChange={e => setTimingDay(e.target.value)} className="w-full p-2.5 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-transparent dark:text-white">
+                                        <option value="Monday" className="text-slate-800">Monday</option>
+                                        <option value="Tuesday" className="text-slate-800">Tuesday</option>
+                                        <option value="Wednesday" className="text-slate-800">Wednesday</option>
+                                        <option value="Thursday" className="text-slate-800">Thursday</option>
+                                        <option value="Friday" className="text-slate-800">Friday</option>
+                                        <option value="Saturday" className="text-slate-800">Saturday</option>
+                                        <option value="Sunday" className="text-slate-800">Sunday</option>
+                                    </select>
+                                    <input type="time" required value={timingStart} onChange={e => setTimingStart(e.target.value)} className="w-full p-2.5 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-transparent dark:text-white" title="Start Time" />
+                                    <input type="time" required value={timingEnd} onChange={e => setTimingEnd(e.target.value)} className="w-full p-2.5 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-transparent dark:text-white" title="End Time" />
+                                </div>
                             </div>
                             <div className="pt-4 flex justify-end space-x-3">
                                 <button type="button" onClick={() => setShowModal(false)} className="px-5 py-2.5 text-slate-600 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition">Cancel</button>

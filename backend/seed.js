@@ -42,8 +42,8 @@ const importData = async () => {
 
         // Course
         const btech = await Course.create({
-            name: 'B.Tech Computer Science',
-            description: 'Bachelor of Technology in CS',
+            name: 'Bca',
+            description: 'Bachelor of Computer Application',
             duration: '4 Years'
         });
 

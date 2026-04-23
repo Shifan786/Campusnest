@@ -13,5 +13,6 @@ router.route('/courses').get(getAvailableCourses);
 router.route('/enroll').post(submitEnrollment);
 router.route('/enrollment-status').get(getEnrollmentStatus);
 router.route('/timetable').get(getTimetable);
+router.route('/marks').get(getGrades);
 
 module.exports = router;

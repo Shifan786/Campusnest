@@ -24,43 +24,39 @@ const AdminDashboard = () => {
     }, []);
 
     const cards = [
-        { title: 'Total Students', value: stats?.totalStudents || 0, icon: Users, color: 'bg-indigo-500', shadow: 'shadow-indigo-500/30', trend: '+12%' },
-        { title: 'Total Faculty', value: stats?.totalFaculty || 0, icon: UserCheck, color: 'bg-emerald-500', shadow: 'shadow-emerald-500/30', trend: '+2%' },
-        { title: 'Active Courses', value: stats?.totalCourses || 0, icon: BookOpen, color: 'bg-blue-500', shadow: 'shadow-blue-500/30', trend: '0%' },
-        { title: 'System Alerts', value: 0, icon: AlertCircle, color: 'bg-rose-500', shadow: 'shadow-rose-500/30', trend: '-1%' },
+        { title: 'Total Students', value: stats?.totalStudents || 0, icon: Users, color: 'bg-indigo-500', shadow: 'shadow-indigo-500/30', trend: '+12%', link: '/admin/users' },
+        { title: 'Total Faculty', value: stats?.totalFaculty || 0, icon: UserCheck, color: 'bg-emerald-500', shadow: 'shadow-emerald-500/30', trend: '+2%', link: '/admin/users' },
+        { title: 'Active Courses', value: stats?.totalCourses || 0, icon: BookOpen, color: 'bg-blue-500', shadow: 'shadow-blue-500/30', trend: '0%', link: '/admin/courses' },
+        { title: 'System Alerts', value: 0, icon: AlertCircle, color: 'bg-rose-500', shadow: 'shadow-rose-500/30', trend: '-1%', link: '/admin/notices' },
     ];
 
-    const enrollmentData = [
-        { name: 'Jan', students: 120 }, { name: 'Feb', students: 150 }, { name: 'Mar', students: 180 },
-        { name: 'Apr', students: 170 }, { name: 'May', students: 210 }, { name: 'Jun', students: 250 },
-    ];
-
-    const attendanceData = [
-        { name: 'CS101', rate: 85 }, { name: 'ME204', rate: 92 }, { name: 'EE401', rate: 78 }, { name: 'PH102', rate: 88 }
-    ];
+    const enrollmentData = stats?.enrollmentData || [];
+    const attendanceData = stats?.attendanceData || [];
 
     return (
         <DashboardLayout title="Administrator Overview" subtitle="System metrics and analytics at a glance">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {cards.map((card, idx) => (
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
-                        key={idx} className="card-base card-hover p-6 flex flex-col relative overflow-hidden group"
-                    >
-                        <div className="flex justify-between items-start mb-4 relative z-10">
-                            <div className={`p-3.5 rounded-2xl ${card.color} text-white shadow-lg ${card.shadow}`}>
-                                <card.icon className="w-6 h-6" />
+                    <Link to={card.link} key={idx} className="block">
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
+                            className="card-base card-hover p-6 flex flex-col relative overflow-hidden group h-full"
+                        >
+                            <div className="flex justify-between items-start mb-4 relative z-10">
+                                <div className={`p-3.5 rounded-2xl ${card.color} text-white shadow-lg ${card.shadow}`}>
+                                    <card.icon className="w-6 h-6" />
+                                </div>
+                                <span className="flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-xl">
+                                    <TrendingUp className="w-3 h-3 mr-1" /> {card.trend}
+                                </span>
                             </div>
-                            <span className="flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-xl">
-                                <TrendingUp className="w-3 h-3 mr-1" /> {card.trend}
-                            </span>
-                        </div>
-                        <div className="relative z-10">
-                            <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tight">{card.value}</h3>
-                            <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{card.title}</p>
-                        </div>
-                        <div className={`absolute -bottom-10 -right-10 w-32 h-32 rounded-full ${card.color} opacity-5 blur-[40px] group-hover:opacity-20 transition-opacity duration-500`} />
-                    </motion.div>
+                            <div className="relative z-10">
+                                <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tight">{card.value}</h3>
+                                <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{card.title}</p>
+                            </div>
+                            <div className={`absolute -bottom-10 -right-10 w-32 h-32 rounded-full ${card.color} opacity-5 blur-[40px] group-hover:opacity-20 transition-opacity duration-500`} />
+                        </motion.div>
+                    </Link>
                 ))}
             </div>
 

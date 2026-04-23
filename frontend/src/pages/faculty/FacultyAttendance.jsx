@@ -81,7 +81,8 @@ const FacultyAttendance = () => {
             setMessage('Bulk attendance saved successfully!');
             setTimeout(() => setMessage(''), 3000);
         } catch (error) {
-            alert('Failed to mark attendance');
+            const errorMessage = error.response?.data?.message || 'Failed to mark attendance';
+            alert(errorMessage);
         }
     };
 

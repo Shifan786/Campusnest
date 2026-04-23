@@ -1,12 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { GraduationCap, Mail, Lock, LogIn } from 'lucide-react';
+import { GraduationCap, Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -41,7 +42,7 @@ const Login = () => {
                     >
                         <GraduationCap className="text-white w-10 h-10" />
                     </motion.div>
-                    <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">ERPEdge</h2>
+                    <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">CampuseNest</h2>
                     <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Welcome back, securely step inside.</p>
                 </div>
 
@@ -57,12 +58,12 @@ const Login = () => {
                             <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
                         </div>
                         <input 
-                            type="email" 
+                            type="text" 
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="block w-full pl-12 pr-4 py-4 border border-slate-200 dark:border-slate-700/60 rounded-2xl bg-white/50 dark:bg-slate-800/50 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-medium backdrop-blur-lg"
-                            placeholder="Email address"
+                            placeholder="Email, Username, or Enrollment ID"
                         />
                     </div>
                     <div className="relative group">
@@ -70,13 +71,26 @@ const Login = () => {
                             <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
                         </div>
                         <input 
-                            type="password" 
+                            type={showPassword ? "text" : "password"} 
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="block w-full pl-12 pr-4 py-4 border border-slate-200 dark:border-slate-700/60 rounded-2xl bg-white/50 dark:bg-slate-800/50 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-medium backdrop-blur-lg"
+                            className="block w-full pl-12 pr-12 py-4 border border-slate-200 dark:border-slate-700/60 rounded-2xl bg-white/50 dark:bg-slate-800/50 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-medium backdrop-blur-lg"
                             placeholder="Password"
                         />
+                        <button 
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-indigo-500 transition-colors"
+                        >
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </button>
+                    </div>
+
+                    <div className="flex justify-end mt-2">
+                        <Link to="/forgot-password" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
+                            Forgot Password?
+                        </Link>
                     </div>
 
                     <motion.button 

@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { GraduationCap, Mail, Lock, User, UserPlus } from 'lucide-react';
+import { GraduationCap, Mail, Lock, User, UserPlus, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Register = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Student' });
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const { register } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -42,7 +43,7 @@ const Register = () => {
                     >
                         <UserPlus className="text-white w-10 h-10" />
                     </motion.div>
-                    <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Join ERPEdge</h2>
+                    <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Join CampusNest</h2>
                     <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Create your institutional account.</p>
                 </div>
 
@@ -71,14 +72,26 @@ const Register = () => {
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-teal-500 transition-colors" />
                         </div>
-                        <input name="password" type="password" required onChange={handleChange} className="block w-full pl-12 pr-4 py-3.5 border border-slate-200 dark:border-slate-700/60 rounded-2xl bg-white/50 dark:bg-slate-800/50 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all font-medium backdrop-blur-lg" placeholder="Password" />
+                        <input 
+                            name="password" 
+                            type={showPassword ? "text" : "password"} 
+                            required 
+                            onChange={handleChange} 
+                            className="block w-full pl-12 pr-12 py-3.5 border border-slate-200 dark:border-slate-700/60 rounded-2xl bg-white/50 dark:bg-slate-800/50 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all font-medium backdrop-blur-lg" 
+                            placeholder="Password" 
+                        />
+                        <button 
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-teal-500 transition-colors"
+                        >
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </button>
                     </div>
 
                     <div>
                         <select name="role" onChange={handleChange} className="block w-full px-4 py-3.5 border border-slate-200 dark:border-slate-700/60 rounded-2xl bg-white/50 dark:bg-slate-800/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all font-medium backdrop-blur-lg cursor-pointer [&>option]:text-slate-900">
                             <option value="Student">Student</option>
-                            <option value="Faculty">Faculty</option>
-                            <option value="Admin">Admin</option>
                         </select>
                     </div>
 

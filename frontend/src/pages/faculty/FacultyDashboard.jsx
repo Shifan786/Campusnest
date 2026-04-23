@@ -54,31 +54,33 @@ const FacultyDashboard = () => {
     }, []);
 
     const cards = [
-        { title: 'Assigned Subjects', value: stats?.assignedSubjects || 0, icon: BookOpen, color: 'bg-indigo-500', shadow: 'shadow-indigo-500/30' },
-        { title: 'Total Enrolled', value: stats?.totalStudents || 0, icon: Users, color: 'bg-blue-500', shadow: 'shadow-blue-500/30' },
-        { title: 'Classes Conducted', value: stats?.classesConducted || 0, icon: Clock, color: 'bg-emerald-500', shadow: 'shadow-emerald-500/30' },
-        { title: 'Pending Marks', value: stats?.pendingMarks || 0, icon: FileText, color: 'bg-rose-500', shadow: 'shadow-rose-500/30' },
+        { title: 'Assigned Subjects', value: stats?.assignedSubjects || 0, icon: BookOpen, color: 'bg-indigo-500', shadow: 'shadow-indigo-500/30', link: '/faculty/classes' },
+        { title: 'Total Enrolled', value: stats?.totalStudents || 0, icon: Users, color: 'bg-blue-500', shadow: 'shadow-blue-500/30', link: '/faculty/classes' },
+        { title: 'Classes Conducted', value: stats?.classesConducted || 0, icon: Clock, color: 'bg-emerald-500', shadow: 'shadow-emerald-500/30', link: '/faculty/attendance' },
+        { title: 'Marks Uploaded', value: stats?.marksUploaded || 0, icon: FileText, color: 'bg-rose-500', shadow: 'shadow-rose-500/30', link: '/faculty/marks' },
     ];
 
     return (
         <DashboardLayout title="Faculty Portal" subtitle="Manage your subjects, classes, and student performance">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-2">
                 {cards.map((card, idx) => (
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
-                        key={idx} className="card-base card-hover p-6 lg:p-8 flex flex-col relative overflow-hidden group"
-                    >
-                        <div className="flex justify-between items-start mb-6 relative z-10">
-                            <div className={`p-4 rounded-2xl ${card.color} text-white shadow-lg ${card.shadow}`}>
-                                <card.icon className="w-6 h-6" />
+                    <Link to={card.link} key={idx} className="block">
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
+                            className="card-base card-hover p-6 lg:p-8 flex flex-col relative overflow-hidden group h-full"
+                        >
+                            <div className="flex justify-between items-start mb-6 relative z-10">
+                                <div className={`p-4 rounded-2xl ${card.color} text-white shadow-lg ${card.shadow}`}>
+                                    <card.icon className="w-6 h-6" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="relative z-10">
-                            <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">{card.value}</h3>
-                            <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{card.title}</p>
-                        </div>
-                        <div className={`absolute -bottom-12 -right-12 w-40 h-40 rounded-full ${card.color} opacity-5 blur-[50px] group-hover:opacity-20 transition-opacity duration-500`} />
-                    </motion.div>
+                            <div className="relative z-10">
+                                <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">{card.value}</h3>
+                                <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{card.title}</p>
+                            </div>
+                            <div className={`absolute -bottom-12 -right-12 w-40 h-40 rounded-full ${card.color} opacity-5 blur-[50px] group-hover:opacity-20 transition-opacity duration-500`} />
+                        </motion.div>
+                    </Link>
                 ))}
             </div>
 

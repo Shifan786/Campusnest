@@ -6,6 +6,7 @@ import { Trash2, UserPlus } from 'lucide-react';
 const AdminUsers = () => {
     const [users, setUsers] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [deleteConfirmId, setDeleteConfirmId] = useState(null);
     const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Student' });
 
     const fetchUsers = async () => {
@@ -23,16 +24,19 @@ const AdminUsers = () => {
         fetchUsers();
     }, []);
 
-    const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this user?")) return;
+    const handleDelete = async () => {
+        if (!deleteConfirmId) return;
         try {
             const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
-            await axios.delete(`http://localhost:5000/api/admin/users/${id}`, {
+            await axios.delete(`http://localhost:5000/api/admin/users/${deleteConfirmId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchUsers();
+            setDeleteConfirmId(null);
         } catch (error) {
             console.error(error);
+            alert(error.response?.data?.message || 'Failed to delete user');
+            setDeleteConfirmId(null);
         }
     };
 
@@ -87,7 +91,7 @@ const AdminUsers = () => {
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                    <button onClick={() => handleDelete(user._id)} className="text-red-600 hover:text-red-900">
+                                    <button onClick={() => setDeleteConfirmId(user._id)} className="text-red-600 hover:text-red-900">
                                         <Trash2 className="w-5 h-5 inline" />
                                     </button>
                                 </td>
@@ -115,6 +119,20 @@ const AdminUsers = () => {
                                 <button type="submit" className="px-4 py-2 bg-indigo-600 font-medium text-white rounded-lg shadow-sm hover:bg-indigo-700 transition">Create User</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {deleteConfirmId && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-xl w-full max-w-sm shadow-2xl text-center">
+                        <Trash2 className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                        <h2 className="text-xl font-bold mb-2">Delete User?</h2>
+                        <p className="text-gray-500 mb-6">Are you sure you want to delete this user? All associated records will be permanently removed.</p>
+                        <div className="flex justify-center space-x-3">
+                            <button onClick={() => setDeleteConfirmId(null)} className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition">Cancel</button>
+                            <button onClick={handleDelete} className="px-4 py-2 bg-red-600 font-medium text-white rounded-lg shadow-sm hover:bg-red-700 transition">Delete</button>
+                        </div>
                     </div>
                 </div>
             )}
