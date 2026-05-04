@@ -1,0 +1,222 @@
+6.1 Database Connection
+This code connects the Node.js app to MongoDB using Mongoose:
+File: backend/config/db.js
+```javascript
+const mongoose = require('mongoose');
+
+const connectDB = async () => {
+    try {
+        const conn = await mongoose.connect(process.env.MONGODB_URI);
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
+    } catch (error) {
+        console.error(`Error: ${error.message}`);
+        process.exit(1);
+    }
+};
+
+module.exports = connectDB;
+```
+
+6.2 Authorization / Authentication
+This code handles User Login and Registration using JWT:
+File: backend/controllers/authController.js
+```javascript
+const authUser = async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({
+        $or: [ { email: email }, { name: email }, { enrollmentNumber: email } ]
+    });
+
+    if (user && (await user.matchPassword(password))) {
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            token: generateToken(user._id, user.role),
+        });
+    } else {
+        res.status(401).json({ message: 'Invalid credentials' });
+    }
+};
+
+const registerUser = async (req, res) => {
+    const { name, email, password, role } = req.body;
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+        return res.status(400).json({ message: 'User already exists' });
+    }
+
+    const user = await User.create({ name, email, password, role: role || 'Student' });
+
+    if (user) {
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            token: generateToken(user._id, user.role),
+        });
+    } else {
+        res.status(400).json({ message: 'Invalid user data' });
+    }
+};
+```
+
+6.3 Home and Dashboard
+Role-based routing is handled on the Frontend (React). The backend provides API routes protected by role-based middleware.
+File: backend/routes/adminRoutes.js (Example)
+```javascript
+const express = require('express');
+const router = express.Router();
+const { protect, admin } = require('../middleware/authMiddleware');
+const { getAdminDashboardStats } = require('../controllers/adminController');
+
+// Only Admins can access this dashboard route
+router.get('/dashboard-stats', protect, admin, getAdminDashboardStats);
+```
+
+6.4 Student Management
+Admins can manage and approve students.
+File: backend/controllers/adminController.js
+```javascript
+const approveStudent = async (req, res) => {
+    try {
+        const student = await User.findById(req.params.id);
+        if (student && student.role === 'Student') {
+            student.isApproved = true;
+            await student.save();
+            res.json({ message: 'Student approved successfully' });
+        } else {
+            res.status(404).json({ message: 'Student not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+```
+
+6.5 Course Management
+Admins can add and manage courses.
+File: backend/controllers/adminController.js
+```javascript
+const createCourse = async (req, res) => {
+    try {
+        const { code, name, department, credits, semester } = req.body;
+        const courseExists = await Course.findOne({ code });
+
+        if (courseExists) {
+            return res.status(400).json({ message: 'Course with this code already exists' });
+        }
+
+        const course = await Course.create({ code, name, department, credits, semester });
+        res.status(201).json(course);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+```
+
+6.6 Result Management
+Faculty can upload and add marks/results for students.
+File: backend/controllers/facultyController.js
+```javascript
+const addOrUpdateMarks = async (req, res) => {
+    try {
+        const { studentId, courseId, marksType, marksObtained, totalMarks, remarks } = req.body;
+        const facultyId = req.user._id;
+
+        const newMark = await Marks.create({
+            student: studentId,
+            course: courseId,
+            faculty: facultyId,
+            marksType,
+            marksObtained,
+            totalMarks,
+            remarks,
+            dateRecorded: new Date()
+        });
+
+        res.status(201).json({ message: 'Marks recorded successfully', mark: newMark });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+```
+
+6.7 View Results
+Students can view their own results.
+File: backend/controllers/studentController.js
+```javascript
+const getMyMarks = async (req, res) => {
+    try {
+        const marks = await Marks.find({ student: req.user._id })
+            .populate('course', 'name code credits')
+            .populate('faculty', 'name')
+            .sort({ dateRecorded: -1 });
+
+        res.json(marks);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+```
+
+6.8 Exam Information
+Exam and Assignment details are attached to the uploaded Materials or Marks models in our system.
+File: backend/models/Marks.js
+```javascript
+const marksSchema = new mongoose.Schema({
+    student: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
+    marksType: { type: String, required: true, enum: ['Midterm', 'Final', 'Assignment', 'Quiz', 'Project'] },
+    marksObtained: { type: Number, required: true },
+    totalMarks: { type: Number, required: true },
+});
+```
+
+6.9 Error Handling
+We use global error handling patterns in Express using standard try/catch and middleware.
+File: backend/middleware/errorMiddleware.js (Concept)
+```javascript
+const notFound = (req, res, next) => {
+    const error = new Error(`Not Found - ${req.originalUrl}`);
+    res.status(404);
+    next(error);
+};
+
+const errorHandler = (err, req, res, next) => {
+    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    res.status(statusCode);
+    res.json({
+        message: err.message,
+        stack: process.env.NODE_ENV === 'production' ? null : err.stack,
+    });
+};
+```
+
+6.10 Application Entry Point
+The main entry point for the Node.js application.
+File: backend/server.js
+```javascript
+const express = require('express');
+const dotenv = require('dotenv');
+const connectDB = require('./config/db');
+
+dotenv.config();
+connectDB();
+
+const app = express();
+app.use(express.json());
+
+// Routes
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/faculty', require('./routes/facultyRoutes'));
+app.use('/api/student', require('./routes/studentRoutes'));
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, console.log(`Server running on port ${PORT}`));
+```

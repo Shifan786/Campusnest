@@ -17,6 +17,7 @@ const DashboardLayout = ({ children, title, subtitle }) => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const [isNotificationsOpen, setNotificationsOpen] = useState(false);
+    const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
     
     useEffect(() => {
         const fetchNotices = async () => {
@@ -170,10 +171,7 @@ const DashboardLayout = ({ children, title, subtitle }) => {
                             <Menu className="w-6 h-6" />
                         </button>
                         
-                        <div className="hidden sm:flex items-center bg-slate-50 dark:bg-slate-800/50 px-4 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 w-64 lg:w-96 focus-within:w-80 lg:focus-within:w-[450px] transition-all duration-300 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 group">
-                            <Search className="w-5 h-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors mr-3" />
-                            <input type="text" placeholder="Search systems, directories..." className="bg-transparent border-none outline-none text-sm w-full text-slate-700 dark:text-slate-200 placeholder-slate-400" />
-                        </div>
+
                     </div>
 
                     <div className="flex items-center space-x-3 sm:space-x-6">
@@ -220,14 +218,36 @@ const DashboardLayout = ({ children, title, subtitle }) => {
                         </div>
 
                         <div className="h-10 w-px bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block"></div>
-                        <div className="flex items-center space-x-4 cursor-pointer hover:opacity-80 transition-opacity">
-                            <div className="hidden md:block text-right">
-                                <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{user?.name || "Loading..."}</p>
-                                <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">{user?.role || "User"}</p>
+                        <div className="relative">
+                            <div onClick={() => setProfileMenuOpen(!isProfileMenuOpen)} className="flex items-center space-x-4 cursor-pointer hover:opacity-80 transition-opacity">
+                                <div className="hidden md:block text-right">
+                                    <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{user?.name || "Loading..."}</p>
+                                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">{user?.role || "User"}</p>
+                                </div>
+                                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 text-white flex items-center justify-center font-bold shadow-md shadow-indigo-500/20 border border-white/20">
+                                    {user?.name?.charAt(0) || 'U'}
+                                </div>
                             </div>
-                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 text-white flex items-center justify-center font-bold shadow-md shadow-indigo-500/20 border border-white/20">
-                                {user?.name?.charAt(0) || 'U'}
-                            </div>
+                            
+                            <AnimatePresence>
+                                {isProfileMenuOpen && (
+                                    <motion.div 
+                                        initial={{ opacity: 0, y: 10, scale: 0.95 }} 
+                                        animate={{ opacity: 1, y: 0, scale: 1 }} 
+                                        exit={{ opacity: 0, y: 10, scale: 0.95 }} 
+                                        transition={{ duration: 0.2 }}
+                                        className="absolute right-0 mt-3 w-48 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden z-50 p-2"
+                                    >
+                                        <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800 mb-1">
+                                            <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{user?.name}</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
+                                        </div>
+                                        <button onClick={handleLogout} className="w-full flex items-center px-3 py-2.5 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors font-medium text-sm">
+                                            <LogOut className="w-4 h-4 mr-3" /> Logout
+                                        </button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
                 </header>

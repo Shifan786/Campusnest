@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import axios from 'axios';
-import { Trash2, UserPlus } from 'lucide-react';
+import { Trash2, UserPlus, GraduationCap, BookOpen } from 'lucide-react';
 
 const AdminUsers = () => {
     const [users, setUsers] = useState([]);
+    const [activeTab, setActiveTab] = useState('Student');
     const [showModal, setShowModal] = useState(false);
     const [deleteConfirmId, setDeleteConfirmId] = useState(null);
     const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Student' });
@@ -52,66 +53,129 @@ const AdminUsers = () => {
         }
     };
 
+    const openModal = (defaultRole) => {
+        setFormData({ name: '', email: '', password: '', role: defaultRole });
+        setShowModal(true);
+    };
+
+    const filteredUsers = users.filter(u => u.role === activeTab);
+
+    const tabs = [
+        { key: 'Student', label: 'Students', icon: GraduationCap, color: 'text-emerald-600', activeColor: 'border-emerald-500 text-emerald-600', count: users.filter(u => u.role === 'Student').length },
+        { key: 'Faculty', label: 'Teachers', icon: BookOpen, color: 'text-blue-600', activeColor: 'border-blue-500 text-blue-600', count: users.filter(u => u.role === 'Faculty').length },
+    ];
+
     return (
         <Layout>
             <div className="flex justify-between items-center mb-8">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-                    <p className="text-gray-500 mt-2">View, add, and remove system users.</p>
+                    <p className="text-gray-500 mt-2">View, add, and remove students and teachers.</p>
                 </div>
-                <button 
-                    onClick={() => setShowModal(true)}
+                <button
+                    onClick={() => openModal(activeTab)}
                     className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-indigo-700 transition"
                 >
-                    <UserPlus className="w-5 h-5 mr-2" /> Add User
+                    <UserPlus className="w-5 h-5 mr-2" /> Add {activeTab === 'Student' ? 'Student' : 'Teacher'}
                 </button>
             </div>
 
+            {/* Tabs */}
+            <div className="flex border-b border-gray-200 mb-6">
+                {tabs.map(tab => (
+                    <button
+                        key={tab.key}
+                        onClick={() => setActiveTab(tab.key)}
+                        className={`flex items-center px-6 py-3 text-sm font-semibold border-b-2 transition-colors mr-2 ${
+                            activeTab === tab.key
+                                ? tab.activeColor + ' bg-white'
+                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        }`}
+                    >
+                        <tab.icon className="w-4 h-4 mr-2" />
+                        {tab.label}
+                        <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-bold ${
+                            activeTab === tab.key ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600'
+                        }`}>
+                            {tab.count}
+                        </span>
+                    </button>
+                ))}
+            </div>
+
+            {/* Users Table */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {users.map(user => (
-                            <tr key={user._id}>
-                                <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{user.name}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-gray-500">{user.email}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                                        user.role === 'Admin' ? 'bg-purple-100 text-purple-800' :
-                                        user.role === 'Faculty' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
-                                    }`}>
-                                        {user.role}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                    <button onClick={() => setDeleteConfirmId(user._id)} className="text-red-600 hover:text-red-900">
-                                        <Trash2 className="w-5 h-5 inline" />
-                                    </button>
+                        {filteredUsers.length === 0 ? (
+                            <tr>
+                                <td colSpan="4" className="px-6 py-10 text-center text-gray-500">
+                                    No {activeTab === 'Student' ? 'students' : 'teachers'} found.
                                 </td>
                             </tr>
-                        ))}
+                        ) : (
+                            filteredUsers.map(user => (
+                                <tr key={user._id} className="hover:bg-gray-50 transition-colors">
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="flex items-center">
+                                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm mr-3 ${
+                                                activeTab === 'Student' ? 'bg-emerald-500' : 'bg-blue-500'
+                                            }`}>
+                                                {user.name?.charAt(0).toUpperCase()}
+                                            </div>
+                                            <span className="font-medium text-gray-900">{user.name}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-gray-500">{user.email}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                                            activeTab === 'Faculty'
+                                                ? 'bg-blue-100 text-blue-800'
+                                                : user.enrollmentStatus === 'Approved'
+                                                ? 'bg-green-100 text-green-800'
+                                                : user.enrollmentStatus === 'Pending'
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : 'bg-red-100 text-red-800'
+                                        }`}>
+                                            {activeTab === 'Faculty' ? 'Active' : (user.enrollmentStatus || 'Active')}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                                        {user.email !== 'admin@college.edu' && (
+                                            <button onClick={() => setDeleteConfirmId(user._id)} className="text-red-600 hover:text-red-900 transition-colors">
+                                                <Trash2 className="w-5 h-5 inline" />
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
 
+            {/* Add User Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-xl w-full max-w-md shadow-2xl">
-                        <h2 className="text-xl font-bold mb-4">Add New User</h2>
+                        <h2 className="text-xl font-bold mb-4">
+                            Add New {formData.role === 'Student' ? 'Student' : 'Teacher'}
+                        </h2>
                         <form onSubmit={handleCreate} className="space-y-4">
-                            <input type="text" placeholder="Name" required className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500" onChange={e => setFormData({...formData, name: e.target.value})} />
-                            <input type="email" placeholder="Email" required className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500" onChange={e => setFormData({...formData, email: e.target.value})} />
+                            <input type="text" placeholder="Full Name" required className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500" onChange={e => setFormData({...formData, name: e.target.value})} />
+                            <input type="email" placeholder="Email Address" required className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500" onChange={e => setFormData({...formData, email: e.target.value})} />
                             <input type="password" placeholder="Password" required className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500" onChange={e => setFormData({...formData, password: e.target.value})} />
                             <select value={formData.role} className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500" onChange={e => setFormData({...formData, role: e.target.value})}>
                                 <option value="Student">Student</option>
-                                <option value="Faculty">Faculty</option>
+                                <option value="Faculty">Teacher (Faculty)</option>
                                 <option value="Admin">Admin</option>
                             </select>
                             <div className="flex justify-end space-x-2 mt-4">
@@ -123,6 +187,7 @@ const AdminUsers = () => {
                 </div>
             )}
 
+            {/* Delete Confirm Modal */}
             {deleteConfirmId && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-xl w-full max-w-sm shadow-2xl text-center">

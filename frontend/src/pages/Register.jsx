@@ -3,7 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { GraduationCap, Mail, Lock, User, UserPlus, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
-
+import Galaxy from '../components/Galaxy';
 const Register = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Student' });
     const [showPassword, setShowPassword] = useState(false);
@@ -27,8 +27,18 @@ const Register = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4 relative overflow-hidden transition-colors duration-500">
-            <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-emerald-500/20 dark:bg-emerald-600/20 blur-[120px]" />
-            <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-teal-500/20 dark:bg-teal-600/20 blur-[120px]" />
+            <div className="absolute inset-0 z-0">
+                <Galaxy 
+                    mouseRepulsion={true}
+                    mouseInteraction={true}
+                    density={1.5}
+                    glowIntensity={0.5}
+                    saturation={0.8}
+                    hueShift={160}
+                />
+            </div>
+            <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-emerald-500/20 dark:bg-emerald-600/20 blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-teal-500/20 dark:bg-teal-600/20 blur-[120px] pointer-events-none" />
 
             <motion.div 
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}

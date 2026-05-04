@@ -18,6 +18,10 @@ const getUsers = async (req, res) => {
 // @access  Private/Admin
 const deleteUser = async (req, res) => {
     try {
+        const userToFind = await User.findById(req.params.id);
+        if (userToFind && userToFind.email === 'admin@college.edu') {
+            return res.status(403).json({ message: 'Cannot delete the default admin account' });
+        }
         const user = await User.findByIdAndDelete(req.params.id);
         if (user) {
             await Attendance.deleteMany({ student: req.params.id });
@@ -79,8 +83,8 @@ const getSystemStats = async (req, res) => {
 // @route   POST /api/admin/courses
 // @access  Private/Admin
 const createCourse = async (req, res) => {
-    const { name, description, duration } = req.body;
-    const course = new Course({ name, description, duration });
+    const { name, description, duration, totalSemesters } = req.body;
+    const course = new Course({ name, description, duration, totalSemesters: totalSemesters || 8 });
     const createdCourse = await course.save();
     res.status(201).json(createdCourse);
 };
@@ -91,6 +95,27 @@ const createCourse = async (req, res) => {
 const getCourses = async (req, res) => {
     const courses = await Course.find({});
     res.json(courses);
+};
+
+// @desc    Update a course
+// @route   PUT /api/admin/courses/:id
+// @access  Private/Admin
+const updateCourse = async (req, res) => {
+    try {
+        const { name, duration, totalSemesters, description } = req.body;
+        const course = await Course.findById(req.params.id);
+        if (!course) return res.status(404).json({ message: 'Course not found' });
+        
+        course.name = name || course.name;
+        course.duration = duration || course.duration;
+        course.totalSemesters = totalSemesters || course.totalSemesters;
+        course.description = description || course.description;
+        
+        await course.save();
+        res.json(course);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 // @desc    Create a subject
@@ -190,6 +215,7 @@ module.exports = {
     getSystemStats,
     createCourse,
     getCourses,
+    updateCourse,
     createSubject,
     createAnnouncement,
     getNotices,

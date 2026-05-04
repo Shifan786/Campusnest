@@ -63,7 +63,7 @@ const markAttendance = async (req, res) => {
 // @access  Private
 const uploadMarks = async (req, res) => {
     try {
-        const { studentId, subjectId, examName, marksObtained, totalMarks, isAbsent } = req.body;
+        const { studentId, subjectId, examName, semester, marksObtained, totalMarks, isAbsent } = req.body;
 
         if (!isAbsent && Number(marksObtained) > Number(totalMarks)) {
             return res.status(400).json({ message: 'Marks obtained cannot be greater than total marks' });
@@ -72,7 +72,8 @@ const uploadMarks = async (req, res) => {
         let existingMarks = await Marks.findOne({
             student: studentId,
             subject: subjectId,
-            examName: examName
+            examName: examName,
+            semester: semester
         });
 
         if (existingMarks) {
@@ -83,6 +84,7 @@ const uploadMarks = async (req, res) => {
                 existingMarks.totalMarks = Number(totalMarks) || existingMarks.totalMarks;
                 existingMarks.isAbsent = isAbsent || false;
                 existingMarks.faculty = req.user._id;
+                existingMarks.semester = semester;
                 await existingMarks.save();
                 return res.status(200).json(existingMarks);
             }
@@ -93,6 +95,7 @@ const uploadMarks = async (req, res) => {
             subject: subjectId,
             faculty: req.user._id,
             examName,
+            semester,
             marksObtained: isAbsent ? 0 : marksObtained,
             totalMarks,
             isAbsent: isAbsent || false
@@ -180,6 +183,14 @@ const markBulkAttendance = async (req, res) => {
     try {
         const { subjectId, date, records } = req.body;
         
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const selectedDate = new Date(date);
+        selectedDate.setHours(0, 0, 0, 0);
+        if (selectedDate.getTime() !== today.getTime()) {
+            return res.status(400).json({ message: 'Attendance can only be marked for today.' });
+        }
+        
         // Check if attendance is already marked for this subject and date
         const existingAttendance = await Attendance.findOne({
             subject: subjectId,
@@ -214,6 +225,53 @@ const markBulkAttendance = async (req, res) => {
 
         await Promise.all(promises);
         res.status(201).json({ message: 'Attendance marked successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const getAttendanceHistory = async (req, res) => {
+    try {
+        const history = await Attendance.aggregate([
+            { $match: { faculty: req.user._id } },
+            { 
+                $group: { 
+                    _id: { date: "$date", subject: "$subject" },
+                    presentCount: { $sum: { $cond: [ { $eq: ["$status", "Present"] }, 1, 0 ] } },
+                    absentCount: { $sum: { $cond: [ { $eq: ["$status", "Absent"] }, 1, 0 ] } }
+                } 
+            },
+            { $sort: { "_id.date": -1 } }
+        ]);
+        
+        const Subject = require('../models/Subject');
+        const populatedHistory = await Promise.all(history.map(async (record) => {
+            const subject = await Subject.findById(record._id.subject);
+            return {
+                ...record,
+                subjectName: subject ? subject.name : 'Unknown Subject'
+            };
+        }));
+        
+        res.json(populatedHistory);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const getAttendanceDetails = async (req, res) => {
+    try {
+        const { subjectId, date } = req.query;
+        if (!subjectId || !date) {
+            return res.status(400).json({ message: 'Subject ID and date are required.' });
+        }
+        const attendanceRecords = await Attendance.find({
+            faculty: req.user._id,
+            subject: subjectId,
+            date: new Date(date)
+        }).populate('student', 'name email enrollmentNumber');
+        
+        res.json(attendanceRecords);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -319,4 +377,4 @@ const deleteSubject = async (req, res) => {
     }
 };
 
-module.exports = { getAssignedSubjects, getStudentsByCourse, markAttendance, uploadMarks, getUploadedMarks, updateMarks, deleteMarks, markBulkAttendance, getDashboardStats, getNotices, getAvailableSubjects, claimSubject, getCourses, createSubject, deleteSubject };
+module.exports = { getAssignedSubjects, getStudentsByCourse, markAttendance, uploadMarks, getUploadedMarks, updateMarks, deleteMarks, markBulkAttendance, getAttendanceHistory, getAttendanceDetails, getDashboardStats, getNotices, getAvailableSubjects, claimSubject, getCourses, createSubject, deleteSubject };

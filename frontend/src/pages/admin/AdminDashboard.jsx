@@ -27,7 +27,6 @@ const AdminDashboard = () => {
         { title: 'Total Students', value: stats?.totalStudents || 0, icon: Users, color: 'bg-indigo-500', shadow: 'shadow-indigo-500/30', trend: '+12%', link: '/admin/users' },
         { title: 'Total Faculty', value: stats?.totalFaculty || 0, icon: UserCheck, color: 'bg-emerald-500', shadow: 'shadow-emerald-500/30', trend: '+2%', link: '/admin/users' },
         { title: 'Active Courses', value: stats?.totalCourses || 0, icon: BookOpen, color: 'bg-blue-500', shadow: 'shadow-blue-500/30', trend: '0%', link: '/admin/courses' },
-        { title: 'System Alerts', value: 0, icon: AlertCircle, color: 'bg-rose-500', shadow: 'shadow-rose-500/30', trend: '-1%', link: '/admin/notices' },
     ];
 
     const enrollmentData = stats?.enrollmentData || [];
@@ -35,7 +34,7 @@ const AdminDashboard = () => {
 
     return (
         <DashboardLayout title="Administrator Overview" subtitle="System metrics and analytics at a glance">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {cards.map((card, idx) => (
                     <Link to={card.link} key={idx} className="block">
                         <motion.div 

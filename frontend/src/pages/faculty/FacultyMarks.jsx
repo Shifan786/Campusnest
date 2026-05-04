@@ -9,6 +9,7 @@ const FacultyMarks = () => {
     const [selectedSubject, setSelectedSubject] = useState('');
     const [selectedStudent, setSelectedStudent] = useState('');
     const [examName, setExamName] = useState('');
+    const [semester, setSemester] = useState('');
     const [marksObtained, setMarksObtained] = useState('');
     const [totalMarks, setTotalMarks] = useState('');
     const [isAbsent, setIsAbsent] = useState(false);
@@ -78,6 +79,7 @@ const FacultyMarks = () => {
         setSelectedSubject(record.subject?._id);
         setSelectedStudent(record.student?._id);
         setExamName(record.examName);
+        setSemester(record.semester);
         setMarksObtained(record.isAbsent ? '' : record.marksObtained);
         setTotalMarks(record.totalMarks);
         setIsAbsent(record.isAbsent || false);
@@ -87,6 +89,7 @@ const FacultyMarks = () => {
     const cancelEdit = () => {
         setEditMarkId(null);
         setExamName('');
+        setSemester('');
         setMarksObtained('');
         setTotalMarks('');
         setIsAbsent(false);
@@ -106,6 +109,7 @@ const FacultyMarks = () => {
                 studentId: selectedStudent,
                 subjectId: selectedSubject,
                 examName,
+                semester: Number(semester),
                 marksObtained: isAbsent ? 0 : Number(marksObtained),
                 totalMarks: Number(totalMarks),
                 isAbsent
@@ -119,7 +123,7 @@ const FacultyMarks = () => {
                 setMessage('Marks uploaded successfully!');
             }
             
-            setExamName(''); setMarksObtained(''); setTotalMarks(''); setIsAbsent(false); setEditMarkId(null);
+            setExamName(''); setSemester(''); setMarksObtained(''); setTotalMarks(''); setIsAbsent(false); setEditMarkId(null);
             fetchUploadedMarks();
             setTimeout(() => setMessage(''), 3000);
         } catch (error) {
@@ -169,9 +173,23 @@ const FacultyMarks = () => {
                         </div>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Exam Name</label>
-                        <input type="text" required value={examName} onChange={e => setExamName(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:text-gray-400" placeholder="e.g. Midterm 1" disabled={!!editMarkId} />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Exam Name</label>
+                            <select required value={examName} onChange={e => setExamName(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:text-gray-400" disabled={!!editMarkId}>
+                                <option value="" disabled>Select Exam</option>
+                                <option value="1st internal">1st internal</option>
+                                <option value="2nd internal">2nd internal</option>
+                                <option value="Sem exam">Sem exam</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Semester</label>
+                            <select required value={semester} onChange={e => setSemester(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:text-gray-400" disabled={!!editMarkId}>
+                                <option value="" disabled>Select Semester</option>
+                                {[1,2,3,4,5,6,7,8].map(sem => <option key={sem} value={sem}>Semester {sem}</option>)}
+                            </select>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -214,6 +232,7 @@ const FacultyMarks = () => {
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Student</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Subject</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Semester</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Exam Name</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Marks Obtained</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Marks</th>
@@ -228,6 +247,7 @@ const FacultyMarks = () => {
                                     <tr key={record._id}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{record.student?.name}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.subject?.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.semester}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.examName}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{record.isAbsent ? 'Absent' : record.marksObtained}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.totalMarks}</td>

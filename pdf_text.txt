@@ -1,0 +1,1916 @@
+3.5        Description  of Components 
+3.4.2     Data Flow Diagrams (Level 0, 1, 2) 
+3.4.1     Context Flow Diagram 
+3.4       Description of Programs 
+3.3       Functional Decomposition 
+3.2       Assumptions and Constraints 
+3.1       Introduction 
+3. System Design............................................................................... (9 – 13) 
+ 
+2.7       Other Requirements 
+2.6       System Attributes 
+2.5       Design Constraints 
+2.4.6     Module 6: Report Generation 
+2.4.5     Module 5: Student View Result 
+2.4.4     Module 4: Result Management 
+2.4.3     Module 3: Course Management 
+2.4.2     Module 2: Student Management 
+2.4.1     Module  1: Authentication 
+2.4       Functional  Requirements 
+2.3       Special  Requirements 
+2.2.4     General  Constraints 
+2.2.3     User Characteristics 
+2.2.2     Product  Functions 
+2.2.1     Product  Perspective 
+2.2       Overall  Description 
+2.1       Introduction 
+2. Software Requirements Specification (SRS) ................................ (5 – 8) 
+ 
+1.8       Software/Hardware Required for Implementation 
+1.7       Software/Hardware Used for Development 
+1.6       End Users 
+1.5       System Architecture 
+1.4       Structure of the System 
+1.3       Scope of the System 
+1.2       Objectives of the System 
+1.1.3     Overview 
+1.1.2     Category 
+1.1.1     Project Title 
+1.1       Introduction  of the System 
+1. Introduction .................................................................................... (1 – 4) 
+INDEX 
+----------------Page (0) Break----------------
+7.9       Error Messages 
+7.8       Alerts 
+7.7       On-Screen Reports 
+7.6       View 
+7.5       Validation 
+7.4       Data Management 
+7.3       Navigation Menu 
+7.2       Home/ Dashboard 
+7.1       Login Page 
+7. User Interface ............................................................................. (31 – 38) 
+ 
+6.10      Application Entry Point 
+6.9       Error Handling 
+6.8       Exam Information 
+6.7       View Results 
+6.6       Result Management 
+6.5       Course Management 
+6.4       Student Management 
+6.3       Home/Dashboard 
+6.2       Authorization / Authentication 
+6.1       Database Connection 
+6. Program Code Listing ............................................................... (24 – 30) 
+ 
+5.3.6     Module 6: Report Generation Module 
+5.3.5     Module 5: Student Result View Module 
+5.3.4     Module 4: Result Management Module 
+5.3.3     Module 3: Course Management Module 
+5.3.2     Module 2: Student Management Module 
+5.3.1     Module 1: Login Module 
+5.3       Modular Decomposition 
+5.2       Structure of the Software Package 
+5.1       Introduction 
+5. Detailed Design ........................................................................... (19 – 23) 
+ 
+4.4       ER Diagram 
+4.3       Table Definition 
+4.2       Purpose and Scope 
+4.1       Introduction 
+4. Database Design ......................................................................... (14 – 18) 
+----------------Page (1) Break----------------
+13. Bibliography / References ........................................................ (52 – 53) 
+12. Abbreviations and Acronyms ................................................... (50 – 51) 
+11. Scope for Enhancement ............................................................ (48 – 49) 
+10. Limitations ................................................................................ (46 – 47) 
+9.  Conclusion ................................................................................... (44 – 45) 
+8.2      Test Reports 
+8.1.3     System Testing 
+8.1.2     Integration Testing 
+8.1.1     Unit Testing 
+8.1      Introduction 
+8. Testing ......................................................................................... (39 – 43) 
+----------------Page (2) Break----------------
+                                                                                                 1 
+Introduction 
+Chapter -1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (3) Break----------------
+                                                                                                 2 
+5.   Report Viewer – Generates and exports result summaries for printing or PDF. 
+4.   Result Module – Enter, calculate, and display student results. 
+3.   Course Management Module – Add, update, and manage courses and subjects. 
+2.   Student Management Module – Add, update, and view student details. 
+1.   Login Module – Secure login for admin and staff with role-based access. 
+1.4 Structure of the System 
+ 
+•     Can be extended with features like mobile apps, notifications and reports.
+ 
+• 
+Supports student, course, and result management with role-based access. 
+• 
+Web-based application accessible through desktop and networks.  
+• 
+Suitable for schools, colleges and other educational institutions. 
+1.3  Scope of the System 
+ 
+•     To develop a scalable system for educational institutions.
+ 
+• 
+To help students easily view their performance online. 
+• 
+To ensure secure role-based access for users. 
+• 
+To automate attendance, marks and student records. 
+• 
+To provide a user-friendly system for managing student and academic data. 
+1.2  Objectives of the System 
+mind, allowing future enhancements  
+ensuring secure and efficient data handling. The system is designed with scalability in 
+application  is  built  using  the  MERN  stack  (MongoDB,  Express.js,  React,  Node.js), 
+performance,  attendance,  and  study  materials  through  an  individual  portal.  The 
+mark attendance, enter marks, and schedule classes. Students can view their academic 
+material  sharing.  The  admin  can  manage  users,  courses,  and  subjects.  Faculty  can 
+faculty  management,  student  management,  attendance  tracking,  marks  entry,  and 
+             The  system  is  divided  into  multiple modules  such  as  login,  admin  dashboard, 
+1.1.3  Overview 
+ 
+Web Development 
+1.1.2  Category 
+ 
+CampusNest - SMART SCHOOL ERP SYSTEM 
+1.1.1  Project Title 
+ 
+1.1 Introduction of the System 
+ 
+1.  Introduction 
+----------------Page (4) Break----------------
+                                                                                                 3 
+ 
+•                                                                                                                                  
+Admin has full access, while students have restricted, view-only access.
+•                                                                                                          
+Stores all student, course, and result information securely.
+6. Database (MongoDB)  
+                                                                                                                                                         
+•    Allows search using student details.  
+•                                                                                                        
+Handles entry, calculation, and display of student results.
+5. Result Module 
+ 
+•                                                                                                                
+Students have read-only access; they cannot modify any data.
+•                                                                                                                              
+Students  can view their individual results and academic performance.
+4. Student UI 
+ 
+•                                                                                  
+Admin can generate and view result reports.
+•                                                                                            
+Admin  can manage students, courses, and results.
+3. Admin UI 
+ 
+•                                                                                                                                                          
+Once authenticated, they are directed to their respective interfaces based on their role.
+•                                                                                  
+Secure login using username and password.
+2. Authentication 
+ 
+•    Access is provided after authentication. 
+•    Includes Admin, Faculty and Students. 
+1. Users 
+Main Layers: 
+ensures smooth interaction between users and reliable data management. 
+management, attendance, fee handling and result processing with a centralized database. This 
+platform  for  managing  school  operations.  It  integrates  role-based  access,  student  and  course 
+The  system  architecture  is  designed  to  provide  a  secure  and  efficient  web   -based 
+1.5 System Architecture 
+----------------Page (5) Break----------------
+                                                                                                 4 
+• 
+Minimum Intel Core i3 processor with 4 GB RAM. 
+• 
+Any computer with internet access for web interface. 
+Hardware: 
+ 
+• 
+Web browser for accessing the application . 
+• 
+Same stack as development (Node.js, MongoDB, React).  
+Software: 
+1.8 Software/Hardware Required for Implementation 
+ 
+• 
+500 GB or more storage. 
+• 
+Minimum Intel Core i3 processor with 4 GB RAM. 
+• 
+Desktop/Laptop (Windows or Linux OS). 
+Hardware: 
+ 
+• 
+VS Code or any Python IDE. 
+• 
+HTML, CSS, Bootstrap for front-end. 
+• 
+MongoDB database. 
+• 
+Python 3.x with React framework. 
+Software: 
+1.7 Software/Hardware Used for Development 
+ 
+• 
+Students – Can view their individual academic results and performance. 
+• 
+Faculty – Handles attendance, enters marks and updates student records. 
+• 
+Admin – Responsible for managing students, courses, results, and reports. 
+1.6 End Users 
+----------------Page (6) Break----------------
+                                                                                                 5 
+Software Requirement Specification 
+SRS- 
+Chapter -2 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (7) Break----------------
+                                                                                                 6 
+features are not included in the current version. 
+• 
+Limited  to  the  features  implemented;  advanced  analytics,  mobile  app,  or  notification 
+• 
+Requires modern web browser (Chrome, Edge, Firefox, etc.). 
+• 
+Compatible with desktop or laptop systems running Windows or Linux. 
+• 
+Requires internet for web deployment (if hosted online). 
+2.2.4  General Constraints 
+ 
+applications. 
+• 
+Users  are  assumed  to  have  basic  computer  literacy  and  familiarity  with  web-based 
+• 
+Students: Can view their own academic performance; read-only access. 
+• 
+Faculty: Enters marks, manages attendance and updates records. 
+•     Admin: Manages faculty, students, courses, attendance, results and reports.
+ 
+2.2.3  User Characteristics 
+ 
+•     Search and filter results by student or course. 
+•     Generate and export result reports (PDF optional). 
+•                                                                                                            
+Students can view their academic results and performance.
+• 
+Faculty can enter and update student marks. 
+• 
+Admin dashboard to manage faculty, students, courses, attendance and results. 
+• 
+Secure login for Admin, Faculty and Students using credentials. 
+2.2.2  Product Functions 
+ 
+academic information. 
+Admin,  Faculty  and  Students,  enabling  secure  data  management  and  easy  access  to 
+student,  course,  attendance  and  result  data.  The  system  supports  role-based  access  for 
+React.js  frontend  with  a  Node.js  backend  and  a  MongoDB  database  to  securely  handle 
+to efficiently manage and streamline academic and administrative processes. It integrates a 
+The CampusNest – Smart School ERP System is a web -based application designed 
+2.2.1  Product Perspective 
+2.2 Overall Description 
+document helps reduce errors and ambiguity and will be updated as the system evolves. 
+behavior   and   project   objectives   among   developers,   testers   and   administrators.   The 
+the  design,  development  and  testing  phases,  ensuring  a  clear  understanding  of  system 
+features, user roles, performance and data management processes. It serves as a guide for 
+functional requirements of the CampusNest – Smart School ERP System, including system 
+This  Software  Requirement  Specification  (SRS)  defines  the  functional  and  non-
+2.1  Introduction 
+ 
+2. Software Requirement Specification (SRS) 
+----------------Page (8) Break----------------
+                                                                                                 7 
+ 
+• 
+Faculty can record and update student attendance.  
+2.4.8  Module 7: Attendance Management  
+ 
+ 
+• 
+Maintains faculty records and subject assignments.  
+• 
+Admin can add, update and manage faculty details.  
+2.4.7  Module 7: Faculty Management  
+ 
+ 
+• 
+Reports can be viewed, printed, or exported  as PDF files. 
+• 
+Admin can generate and view reports. 
+2.4.6  Module 6: Report Generation 
+ 
+• 
+Displays subject-wise marks, grades, and overall result summary. 
+• 
+Students can log in to view their own academic performance. 
+2.4.5  Module 5: Student Result View 
+ 
+•   Ensures accurate and error-free data handling. 
+• 
+Admin can enter marks and calculate grades automatically. 
+2.4.4  Module 4: Result Management 
+ 
+• 
+Supports storing and searching student records.  
+• 
+Admin can add, update, and manage course details. 
+2.4.3  Module 3: Course Management 
+ 
+• 
+Supports storing and searching student records.  
+• 
+Admin can add, update and delete student details.  
+2.4.2  Module 2: Student Management 
+ 
+• 
+Validates credentials and redirects based on role . 
+• 
+Provides secure login for Admin, Faculty and Students.  
+2.4.1  Module 1: Authentication Module 
+2.4 Functional Requirements 
+ 
+• 
+Stable Internet Connection (for web access if deployed online). 
+• 
+500 GB or more Hard Disk Space. 
+• 
+Minimum: Intel Core i3 Processor, 4 GB RAM. 
+•     Desktop/Laptop (Windows or Linux OS). 
+Hardware: 
+ 
+• 
+MongoDB Workbench . 
+• 
+VS Code or any Python-supported IDE. 
+• 
+HTML, CSS, Bootstrap (for front-end design). 
+• 
+Node.js, Express.js, React. 
+Software: 
+2.3 Special Requirements (Software/Hardware – if any) 
+----------------Page (9) Break----------------
+                                                                                                 8 
+• 
+Possibility of adding graphical performance reports in future updates. 
+• 
+Future integration with email/SMS notification system. 
+• 
+Option to generate printable or downloadable result reports. 
+•                               admin activities (add, update, delete actions). 
+Logging of all 
+2.7  Other Requirements (If Any) 
+ 
+•      Maintainability:  Modular React structure allows easy updates and improvements. 
+• 
+Usability: Simple and user-friendly interface for   Admin, Faculty and Students. 
+• 
+Security: Role-based authentication  ensures restricted access. 
+• 
+Availability:  Accessible anytime through a web browser (if hosted). 
+•                            High, as all data is validated before entry. 
+Reliability: 
+2.6 System Attributes 
+ 
+• 
+Only Admins can modify or delete data. 
+• 
+Database connections must remain secure and stable. 
+• 
+Should function smoothly on local or hosted servers. 
+• 
+Must run in web browsers with responsive interface. 
+2.5 Design Constraints 
+• 
+Students can view their attendance details. 
+----------------Page (10) Break----------------
+                                                                                                 9 
+System Design (Functional Design) 
+Chapter-3 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (11) Break----------------
+                                                                                                  10 
+• 
+Provides result filtering and summary view by name, roll number, or course. 
+• 
+Facilitates entry and modification of student marks and grades. 
+4.   Result Management 
+ 
+• 
+Links each course to the appropriate class for organized result entry. 
+• 
+Enables Admin to create and manage course details such as name and code. 
+3.  Course Management 
+ 
+• 
+Ensures accurate mapping of students to their respective classes or courses. 
+• 
+Allows Admin to add, edit, or remove student records. 
+2.  Student Management 
+ 
+• 
+Redirects users to their respective dashboards based on their role. 
+• 
+Validates Admin and Student credentials for secure access. 
+1.  Login System 
+The Student Result Management System is divided into the following major functional modules: 
+3.3 Functional Decomposition 
+ 
+• 
+The system does not currently include mobile or SMS integration. 
+• 
+Only authorized Admin/Faculty can modify data; Students have view-only access. 
+• 
+Requires a running Node.js server and MongoDB database. 
+• 
+Works best on modern web browsers (Chrome, Edge, Firefox). 
+Constraints: 
+ 
+• 
+The application server and database are properly configured. 
+• 
+The system runs on a device with internet access and a web browser. 
+• 
+Users (Admin, Faculty and Students) have valid login credentials. 
+Assumptions: 
+3.2 Assumptions and Constraints 
+ 
+scalability and secure data handling. 
+attendance,   result   processing   and   report   generation   while   maintaining   reliability, 
+and  ease  of  use  for  Admin,  Faculty  and  Students.  Its  goal  is  to  automate  tasks  such  as 
+backend connected to a MongoDB database. The design ensures data security, modularity 
+client–server architecture, where a React.js-based frontend communicates with a Node.js 
+data flow of the CampusNest  –and administrative data efficiently. The system follows a 
+process  and  display  academic System  design  defines  the  architecture,  components  and 
+Smart  School  ERP  System.  It  explains  how  different  modules  interact  to  manage, 
+3.1 Introduction 
+3.  System Design 
+----------------Page (12) Break----------------
+                                                                                                  11 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+• 
+Report Generation – Prepares printable reports and summaries. 
+• 
+Result Processing – Manages mark entry and grade calculation. 
+• 
+Student & Course Management – Handles academic record maintenance. 
+• 
+Authentication Module – Validates user credentials. 
+System Block: 
+ 
+• 
+Database (MongoDB) – Stores all system data securely. 
+• 
+Student – Views individual academic results. 
+• 
+Admin – Manages students, courses, and results. 
+Entities: 
+3.4.1  Context Flow Diagram(CFD) 
+3.4 Description of Program: 
+ 
+• 
+Supports exporting result summaries for record-keeping or official use. 
+• 
+Generates printable and downloadable reports of student performance. 
+6.  Report Generator 
+ 
+• 
+Displays detailed marks, grades, and overall performance per exam. 
+• 
+Allows  students  to securely log in and view their individual results. 
+5.  Student  Result  View 
+----------------Page (13) Break----------------
+                                                                                                  12 
+• 
+Level 1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+• 
+Level 0 
+ 
+3.4.2  Data Flow Diagrams (DFDs) 
+ 
+----------------Page (14) Break----------------
+                                                                                                  13 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                                                                  
+ 
+• 
+Level  2 
+ 
+----------------Page (15) Break----------------
+                                                                                                  14 
+• 
+Challenges: Maintaining consistent report formatting. 
+• 
+Output: Printable and downloadable reports. 
+• 
+Input: Result and student data from the database. 
+• 
+Tools: React, HTML/CSS, PDF generation library (optional). 
+• 
+Purpose: Generate summary reports and export results. 
+3.5.6 Functional Component 6: Report Generation 
+ 
+maintaining accurate synchronization between student and course tables. 
+• 
+Challenges: Ensuring secure access so only the respective student can view their data and 
+• 
+Output: Display of student’s marks, grades, and total performance for each course. 
+• 
+Input: Student roll number or login credentials. 
+• 
+Tools: React , HTML, CSS, Bootstrap, MongoDB. 
+interface. 
+• 
+Purpose: Allow students to securely view their individual academic results through the web 
+3.5.5 Functional Component 5: Student Result View 
+ 
+• 
+Challenges: Ensuring accuracy and preventing data loss. 
+• 
+Output: Computed grades and stored results. 
+• 
+Input: Marks for each student per course. 
+• 
+Tools: React, MongoDB. 
+• 
+Purpose: Handle mark entry, grade calculation, and result display. 
+3.5.4 Functional Component 4: Result Management 
+ 
+• 
+Challenges: Maintaining consistency between student and course data. 
+• 
+Output: Structured course list for result entry and display. 
+• 
+Input: Course name, code, and related class. 
+• 
+Tools: React, MongoDB. 
+• 
+Purpose: Maintain course information linked to student records. 
+3.5.3 Functional Component 3: Course Management 
+ 
+• 
+Challenges: Ensuring accuracy, managing file uploads, and preventing data loss.. 
+• 
+Output: Updated student database. 
+• 
+Input: Student roll number, subject, date, marks, and files. 
+• 
+Tools: Node.js, React, MongoDB. 
+• 
+Purpose: Manage all student records within the system. 
+3.5.2 Functional Component 2: Student Management 
+ 
+• 
+Challenges: Ensuring security and preventing unauthorized access. 
+• 
+Output: Authorized access to dashboard. 
+• 
+Input: Email and password.. 
+• 
+Tools: Node.js, Express, JSON Web Tokens (JWT), React forms, MongoDB 
+• 
+Purpose: Validate Admin, Faculty, and Student credentials for secure access. 
+3.5.1 Functional Component 1: Authentication 
+3.5  Description  of Components 
+----------------Page (16) Break----------------
+                                                                                                  15 
+Database Design 
+Chapter-4 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (17) Break----------------
+                                                                                                  16 
+class 
+class_name                    VARCHAR(100)             Name    of    the 
+each class 
+id                                    INT                                   Unique    ID   for 
+Field Name              Data Type                  Description 
+ 
+4.3.1 Table: User 
+4.3 Table Definition 
+ 
+o 
+Result report export in PDF format. 
+o 
+Integration with institutional databases. 
+o 
+Online deployment with multiple user access. 
+• 
+The system can later be extended for: 
+ 
+o 
+Study Materials and Announcements. 
+o 
+Result data (marks obtained, total, linked student and subject)  
+o 
+Attendance records (date, status, linked student and subject)  
+o 
+Course and Subject information (course name, code) 
+o 
+User details (name, email, role, contact, course) 
+• 
+Stores information including: 
+• 
+Centralized database accessible through the web-based backend API.. 
+Scope: 
+institutions. 
+• 
+To  provide  secure,  organized,  and  efficient  data  handling  for  academic 
+examinations, attendance, and results. 
+• 
+To store and manage structured data related to students, faculty, courses, 
+Purpose: 
+4.2 Purpose and Scope 
+ 
+represents a realworld entity such as User, Course, Subject, Marks, or Attendance.. 
+referenced  documents  to  ensure  data  consistency  and  efficient  access.  Each  collection 
+scalable   NoSQL   database   management   system.   The   design   leverages   schemas   and 
+enables  faster  data  retrieval.  The  Campusnest  database  uses  MongoDB,  a  reliable  and 
+efficiently.  A  well-designed  database  ensures  data  integrity,  minimizes  redundancy,  and 
+Campusnest  ERP  System.  It  defines  how  data  will  be  stored,  organized,  and  accessed 
+Database  design  is  one  of  the  most  critical  stages  in  the  development  of  the 
+4.1 Introduction 
+4. Database Design 
+----------------Page (18) Break----------------
+                                                                                                  17 
+ 
+ 
+(Midterm, Final)  
+examType                         String                              Type of exam 
+totalMarks                         Number                           Total marks possible   
+student 
+marksObtained                  Number                           Marks scored by 
+Reference to Subject  
+subject                              ObjectId 
+User 
+Reference to Student 
+student                              ObjectId  
+mark entry  
+Unique ID for the 
+_id                                    ObjectId 
+Field  Name                Data Type                Description  
+ 
+4.3.4 Table:  Marks 
+ 
+Faculty User  
+Reference to 
+faculty                            ObjectId  
+collection  
+Reference to Course 
+course                            ObjectId  
+subjectCod e                   String                                Subject code 
+subjectName                   String                                Name of the subject   
+subject 
+Unique ID for each 
+id                                    ObjectId 
+Field  Name              Data Type                  Description  
+ 
+ 
+4.3.3 Table: Subject 
+course 
+Total duration of the 
+duration                           String 
+course 
+course_code                   String                                Code     of     the 
+name                              String                                Course name 
+each course 
+id                                    ObjectId                            Unique    ID   for 
+Field  Name              Data Type                  Description  
+ 
+4.3.2 Table:  Course  
+----------------Page (19) Break----------------
+                                                                                                  18 
+User 
+email                            ObjectId                             Reference to Faculty 
+Reference to Subject 
+course                           ObjectId  
+download  
+roll                                String                                File path/URL for 
+Title of the material   
+name                             String 
+material  
+Unique ID for 
+id                                  ObjectId 
+Field  Name            Data Type                  Description  
+ 
+4.3.6 Table:  Material  
+ 
+status                              sibject                             Present or Absent  
+date                                Date                                Date of the class  
+subject                            ObjectId                         Reference to Subject   
+User 
+student                           ObjectId                         Reference to Student 
+attendance record  
+_id                                  ObjectId                         Unique ID for 
+Field  Name               Data  Type                 Description   
+ 
+4.3.5 Table: Attendance 
+ 
+----------------Page (20) Break----------------
+                                                                                                  19 
+ 
+ 
+ 
+ 
+ 
+4.4  ER Diagram 
+ 
+----------------Page (21) Break----------------
+                                                                                                  20 
+Detailed Design 
+Chapter-5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (22) Break----------------
+                                                                                                  21 
+• 
+Compares hashed passwords using bcrypt.
+• 
+Validates entered credentials against the MongoDB database. 
+Procedural Details 
+5.3.1.2 
+ 
+• 
+User role (Admin, faculty or Student). 
+• 
+User credentials (email and password). 
+Inputs 
+5.3.1.1 
+5.3.1   Module 1: Login System 
+5.3 Modular Decomposition of the System 
+ 
+└── Display Individual Academic Results Securely 
+├── Authenticate Student Login 
+└── Student Result View Module 
+│ 
+│        └── Export Results for Academic Records 
+│        ├── Generate Printable / Downloadable Reports 
+├── Report Generation Module 
+││ 
+│        └── Enter / Update Marks and Grades 
+│        ├── Add and Manage Attendance Data 
+├── Faculty Management Module 
+│ 
+│        └── Manage Courses and Subjects 
+│        ├── Add / Edit / Delete Faculty & Student Records 
+├── Admin Management Module 
+│ 
+│        └── Redirect to Respective Dashboard (Admin/Faculty/Student) 
+│        ├── Validate User Credentials (Admin/Student) 
+├── Login System 
+│ 
+Main Application 
+5.2 Structure of the Software Package (Structure Chart) 
+ 
+students. 
+security, data integrity, and a user-friendly interface for both administrators, faculty, and 
+modular  development,  easy  debugging,  and  future  scalability.  The  design  emphasizes 
+students,   handling   course   details,   entering   marks,   or   scheduling   classes— ensuring 
+processing.  Each  module  is  designed  to  perform  a  specific  function— like  managing 
+components   such   as   login,   user   management,   course   management,   and   academic 
+structure  and  logic  of  each  functional  module.  It  defines  how  data  flows  between 
+The  detailed  design  of  the  Campusnest  ERP  System  focuses  on  the  internal 
+5.1  Introduction 
+5. Detailed Design 
+----------------Page (23) Break----------------
+                                                                                                  22 
+• 
+Read/Write operations on the course table. 
+File I/O Interfaces 
+5.3.3.3 
+ 
+• 
+Each course is linked to multiple students and results. 
+• 
+Admin adds, updates, or deletes course records. 
+Procedural Details 
+5.3.3.2 
+ 
+• 
+Course details (Course Name, Class). 
+Inputs 
+5.3.3.1 
+5.3.3   Module  3: Course Management Module 
+ 
+• 
+Error  handling  for database  operation  failures.  
+• 
+Input validation to avoid duplicate or invalid range entries     . 
+Implementation  Aspects  
+5.3.2.5  
+ 
+• 
+Updated lists displayed on the faculty dashboard    . 
+• 
+Confirmation  of record  addition,  modification,  or deletion.  
+Outputs  
+5.3.2.4  
+ 
+• 
+Read/Write operations on Marks and Attendance collections     . 
+File  I/O Interfaces  
+5.3.2.3  
+ 
+• 
+Changes are updated in the Marks and Attendance collections in MongoDB      . 
+• 
+Faculty selects subject and adds attendance or marks for enrolled students.        
+Procedural  Details  
+5.3.2.2  
+ 
+• 
+Student IDs, Subject IDs, Marks, Attendance Status.     . 
+Inputs 
+5.3.2.1  
+5.3.2   Module  2: Faculty Academic Module   
+ 
+• 
+Use of JWT for secure login state management    . 
+• 
+Input validation and NoSQL injection protection     
+Implementation  Aspects  
+5.3.1.5  
+ 
+• 
+Invalid login  →  Error  message  displayed.  
+• 
+Successful login → Dashboard access with JWT token. 
+Outputs  
+5.3.1.4  
+ 
+• 
+Reads user data from the database user collection    . 
+File  I/O Interfaces  
+5.3.1.3  
+ 
+----------------Page (24) Break----------------
+                                                                                                  23 
+• 
+Display of marks, grades, and total performance. 
+Outputs 
+5.3.5.4 
+ 
+• 
+Read operations on the result table. 
+File I/O Interfaces 
+5.3.5.3 
+ 
+• 
+Retrieves and displays results for the specific student from the database. 
+• 
+Validates login credentials. 
+Procedural Details 
+5.3.5.2 
+ 
+• 
+Student login credentials (Roll number, password). 
+Inputs 
+5.3.5.1 
+5.3.5   Module 5: Student Result View Module 
+ 
+• 
+Error handling for duplicate or missing entries. 
+• 
+Input validation for marks range. 
+Implementation Aspects 
+5.3.4.5 
+ 
+• 
+Display of computed grades and totals. 
+• 
+Stored and retrievable result records. 
+Outputs 
+5.3.4.4 
+ 
+• 
+Read/Write operations on the result table. 
+File I/O Interfaces 
+5.3.4.3 
+ 
+• 
+Calculates total and grade automatically. 
+• 
+Admin enters or updates marks for each student. 
+Procedural Details 
+5.3.4.2 
+ 
+• 
+Student roll number, course, and obtained marks. 
+Inputs 
+5.3.4.1 
+5.3.4   Module 4: Result Management Module 
+ 
+• 
+Input validation for unique course codes. 
+• 
+Maintains foreign key relationships with student and result tables. 
+Implementation Aspects 
+5.3.3.5 
+ 
+• 
+Updated  course  list  shown  in the admin dashboard. 
+• 
+Confirmation  message  for successful  course  management  operations.  
+Outputs  
+5.3.3.4  
+----------------Page (25) Break----------------
+                                                                                                  24 
+• 
+Maintains report formatting consistency. 
+• 
+Uses React and report generation libraries. 
+Implementation Aspects 
+5.3.6.5 
+ 
+• 
+Printable report or downloadable PDF file. 
+Outputs 
+5.3.6.4 
+ 
+• 
+Optionally exports report as PDF. 
+• 
+Reads data from student, course, and result tables. 
+File I/O Interfaces 
+5.3.6.3 
+ 
+• 
+Allows filtering by roll number, course, or academic year. 
+reports. 
+• 
+Fetches  data  from the  database  and  formats  it  into  printable  or  downloadable 
+Procedural Details 
+5.3.6.2 
+ 
+• 
+Selected student or course for report generation. 
+Inputs 
+5.3.6.1 
+5.3.6   Module 6: Report Generation Module 
+ 
+• 
+Responsive web design for ease of viewing on different devices. 
+• 
+Ensures  secure  access  —  only  the logged -in student can view their data. 
+Implementation  Aspects  
+5.3.5.5  
+----------------Page (26) Break----------------
+                                                                                                  25 
+Program Code Listing 
+Chapter-6  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (27) Break----------------
+                                                                                                  26 
+ 
+    } 
+        return res.status(400).json({ message: 'User already exists' });  
+    if (userExists) { 
+ 
+    const userExists = await User.findOne({ email }); 
+    const { name, email, password, role } = req.body; 
+const registerUser = async (req, res) => { 
+ 
+}; 
+    } 
+        res.status(401).json({ message: 'Invalid credentials' });  
+    } else { 
+        }); 
+            token: generateToken(user._id, user.role), 
+            role: user.role, 
+            email: user.email, 
+            name: user.name, 
+            _id: user._id, 
+        res.json({ 
+    if (user && (await user.matchPassword(password))) { 
+ 
+    }); 
+        $or: [ { email: email }, { name: email }, { enrollmentNumber: email } ]  
+    const user = await User.findOne({ 
+ 
+    const { email, password } = req.body; 
+const authUser = async (req, res) => { 
+ 
+6.2  Authorization / Authentication 
+}; 
+    } 
+        process.exit(1); 
+        console.error(`Error: ${error.message}`); 
+    } catch (error) { 
+        console.log(`MongoDB Connected: ${conn.connection.host}`); 
+        const conn = await mongoose.connect(process.env.MONGODB_URI); 
+    try { 
+const connectDB = async () => { 
+ 
+const mongoose = require('mongoose'); 
+6.1  Database Connection 
+6. Program Code Listing 
+----------------Page (28) Break----------------
+                                                                                                  27 
+        } else { 
+successfully' }); 
+            res.json({ message: 'Student approved 
+            await student.save(); 
+            student.isApproved = true; 
+        if (student && student.role === 'Student') {  
+User.findById(req.params.id); 
+        const student = await 
+    try { 
+const approveStudent = async (req, res) => {  
+ 
+6.4 Student Management 
+ 
+router.get('/dashboard-stats', protect, admin, getAdminDashboardStats); 
+// Only Admins can access this dashboard route 
+ 
+const { getAdminDashboardStats } = require('../controllers/adminController'); 
+const { protect, admin } = require('../middleware/authMiddleware'); 
+const router = express.Router(); 
+const express = require('express'); 
+6.3 Home and Dashboard 
+}; 
+    } 
+        res.status(400).json({ message: 'Invalid user data' });  
+    } else { 
+        }); 
+            token: generateToken(user._id, user.role), 
+            role: user.role, 
+            email: user.email, 
+            name: user.name, 
+            _id: user._id, 
+        res.status(201).json({ 
+    if (user) { 
+ 
+}); 
+    const user = await User.create({ name, email, password, role: role || 'Student' 
+----------------Page (29) Break----------------
+                                                                                                  28 
+        res.status(201).json({ message: 'Marks recorded successfully', mark: newMark 
+ 
+        }); 
+            dateRecorded: new Date() 
+            remarks, 
+            totalMarks, 
+            marksObtained, 
+            marksType, 
+            faculty: facultyId, 
+            course: courseId, 
+            student: studentId, 
+        const newMark = await Marks.create({ 
+ 
+        const facultyId = req.user._id; 
+= req.body; 
+        const { studentId, courseId, marksType, marksObtained, totalMarks, remarks } 
+    try { 
+const addOrUpdateMarks = async (req, res) => { 
+6.6 Result Management 
+ 
+}; 
+    } 
+        res.status(500).json({ message: error.message }); 
+    } catch (error) { 
+        res.status(201).json(course); 
+        const course = await Course.create({ code, name, department, credits, semester }); 
+ 
+        } 
+            return res.status(400).json({ message: 'Course with this code already exists' }); 
+        if (courseExists) { 
+ 
+        const courseExists = await Course.findOne({ code }); 
+        const { code, name, department, credits, semester } = req.body; 
+    try { 
+const createCourse = async (req, res) => { 
+6.5 Course Management 
+ 
+}; 
+     } 
+}); 
+         res.status(500).json({ message: error.message 
+     } catch (error) {   
+         } 
+found' });  
+              res.status(404).json({ message: 'Student not 
+----------------Page (30) Break----------------
+                                                                                                  29 
+'Project'] }, 
+enum: ['Midterm', 'Final', 'Assignment', 'Quiz', 
+    marksType: { type: String, required: true, 
+required: true }, 
+mongoose.Schema.Types.ObjectId, ref: 'Course', 
+    course: { type: 
+required: true }, 
+mongoose.Schema.Types.ObjectId, ref: 'User', 
+    student: { type: 
+mongoose.Schema({ 
+@ const marksSchema = new 
+6.8 Exam Information 
+ 
+}; 
+    } 
+message: error.message }); 
+        res.status(500).json({ 
+    } catch (error) { 
+        res.json(marks); 
+ 
+dateRecorded: -1 }); 
+            .sort({ 
+'name') 
+            .populate('faculty', 
+'name code credits') 
+            .populate('course', 
+req.user._id }) 
+Marks.find({ student: 
+        const marks = await 
+    try { 
+(req, res) => { 
+const getMyMarks = async 
+ 
+6.7 View Results 
+ 
+}; 
+     } 
+         res.status(500).json({ message: error.message });     
+     } catch (error) {   
+}); 
+----------------Page (31) Break----------------
+                                                                                                  30 
+app.use(express.json());
+const app = express(); 
+ 
+connectDB(); 
+dotenv.config(); 
+ 
+const connectDB = require('./config/db'); 
+const dotenv = require('dotenv'); 
+const express = require('express'); 
+6.10  Application Entry Point 
+}; 
+    }); 
+'production' ? null : err.stack, 
+        stack: process.env.NODE_ENV === 
+        message: err.message, 
+    res.json({ 
+    res.status(statusCode); 
+500 : res.statusCode; 
+    const statusCode = res.statusCode === 200 ? 
+const errorHandler = (err, req, res, next) => { 
+ 
+}; 
+    next(error); 
+    res.status(404); 
+${req.originalUrl}`); 
+Error(`Not Found - 
+    const error = new 
+next) => { 
+const notFound = (req, res, 
+ 
+ 
+6.9 Error Handling 
+ 
+}); 
+    totalMarks: { type: Number, required: true }, 
+}, 
+     marksObtained: { type: Number, required: true 
+----------------Page (32) Break----------------
+                                                                                                  31 
+User Interface 
+Chapter-7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (33) Break----------------
+                                                                                                  32 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+attendance summaries. 
+attendance,  marks,  and  upload  materials.  Students  view  their  personal  info,  grades,  and 
+manage  students,  courses,  subjects,  and  view  total  user  metrics.  Faculty  can  manage 
+The  Home  Page  welcomes  the user and  displays rolespecific  options.  Admins  can 
+7.2  Admin Dashboard 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Framer Motion for smooth entrance animations. 
+password.  Invalid  login  attempts  trigger flash  messages  to  notify the user. The  page  uses 
+Login  Page  The  Login  Page  allows  users  to  securely  log  in  using  their  email  and 
+Login Page 
+7.1 
+ 
+7. User Interface 
+----------------Page (34) Break----------------
+                                                                                                  33 
+ 
+Add Course 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Add Student  
+ 
+cleanly structured tables   
+or  edit  information  securely.  Data  is  fetched  asynchronously  via  Axios  and  displayed  in 
+Student, course, and result data are submitted through styled forms. Admin can add 
+7.3  Data Management  
+ 
+----------------Page (35) Break----------------
+                                                                                                  34 
+ 
+View  Attendan ce 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+View Result  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Add Result 
+----------------Page (36) Break----------------
+                                                                                                  35 
+ 
+ 
+ 
+ 
+course-wise marks, grades, SGPA, CGPA, and promotion status.  
+Admins  can  see  all student  details  and  results  grouped  by class,  including 
+7.5.1    Faculty Dashboard  
+7.5  View 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+forms to the backend API.  . 
+numeric  inputs  for  marks,  and  ensures  all  required  fields  are  filled  before  submitting 
+The  system  checks  for  valid  login  credentials,  unique  email  addresses,  proper 
+7.4 Validation  
+----------------Page (37) Break----------------
+                                                                                                  36 
+Testing 
+Chapter-8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (38) Break----------------
+                                                                                                  37 
+updates. 
+Tested  for  invalid  data  input  and  ensured  recalculation  worked  correctly  after 
+Checked the accuracy of result entry, marks calculation, and updating of records. 
+•   Result Management Module: 
+ 
+that each course is correctly associated with a class or semester. 
+Ensured  courses  could  be  added,  modified,  and  deleted  successfully.  Validated 
+•   Course Management Module: 
+ 
+entries, missing fields, and validation of roll numbers. 
+Verified  adding,  updating,  and  deleting  student  details.  Tested  for  duplicate 
+•   Student Management Module: 
+ 
+ensure secure authentication and correct redirection to their respective dashboards. 
+Tested  for  both  admin  and  student  logins  using  valid  and  invalid  credentials  to 
+•   Login Module: 
+accuracy. 
+Each module of the system was tested separately to ensure proper functionality and data 
+8.1.1 Unit Testing 
+ 
+ 
+accurate results, and maintains data integrity across all modules.. 
+system’s robustness. The main goal was to ensure that Campusnest performs reliably, provides 
+invalid  input  data,  missing  records,  and  incorrect  credentials  were  also  tested  to  verify  the 
+efficiently, securely, and accurately for administrators, faculty, and students. Edge cases such as 
+evaluate  the  complete  MERN  stack  in  a  real -time  environment,  ensuring  that  it  operated 
+seamless  data  flow  across  the  system  via  Axios.  Finally,  system  testing  was  conducted  to 
+integration  testing,  interactions  between  the  frontend  and  backend  were  verified  to  confirm 
+and React component was tested individually to ensure its components performed as expected. In 
+User Management, Academic Processing, and Student View. During unit testing, each API route 
+to  verify  the  accuracy,  reliability,  and  performance  of  each  functional  module  such  as  Login, 
+testing was carried out at multiple levels —  unit testing, integration testing, and system testing —  
+system  functions  according  to  its  specified  requirements.  For  the  Campusnest  ERP  System, 
+Software testing is a crucial phase in the software development life cycle that ensures the 
+8.1 Introduction 
+8. Testing 
+----------------Page (39) Break----------------
+                                                                                                  38 
+and non-functional requirements. 
+that all components worked together smoothly and fulfilled the project’s functional 
+System testing evaluated the complete SRMS as a unified application to verify 
+8.1.3 System Testing 
+ 
+between modules. 
+These tests confirmed that the system-maintained data consistency and logical flow 
+ 
+• 
+Result Update →  Report Generation →  Student View. 
+• 
+Student & Course Data Integration →  Result Calculation. 
+• 
+Login →  Dashboard →  Module Access. 
+Scenarios Covered: 
+ 
+Student Result View. 
+• 
+Marks  and  attendance  entered  by  faculty  should  instantly  be  visible  on  the 
+the database and subsequent GET requests. 
+• 
+Data added in the Admin Management Module should automatically reflect in 
+respective dashboards. 
+• 
+Successful  login  should  store  the  JWT  token  and  redirect  users  to  their 
+Key Interactions Tested: 
+ 
+correctly. 
+Integration  testing  focused  on  ensuring  that  the  frontend  and  backend  interacted 
+8.1.2 Integration Testing 
+ 
+system functions correctly and all validations work as intended. 
+information and results, and checking alerts and error messages. This ensured the 
+editing   student   and   course   data,   entering   exam   results,   viewing   student 
+VS Code. Manual testing included logging in as admin and student, adding and 
+of key  functionalities,  along  with manual  testing by  running  the application  in 
+The system was tested using Python’s unittest framework for automated testing 
+•   Tools Used: 
+ 
+Verified correct data retrieval and formatting. 
+Tested  the  generation  of  printable  and  downloadable  reports  in  PDF  format. 
+•   Report Generation Module: 
+ 
+Tested data display for different students to confirm privacy and correctness.        
+Ensured  that  students  could  log  in  securely  and  view  their  results  accurately. 
+•   Student  Result  View  Module:  
+----------------Page (40) Break----------------
+                                                                                                  39 
+credentials  
+invalid                          credentials” error 
+TC_002                          Login  with                      Displays  “Invalid      Passed  
+token  
+credentials                        dashboard with 
+TC_001                       Login with valid                   Redirects to                          Passed  
+ID                                                              Result  
+Test Case              Description                      Expected                     Status  
+ 
+8.2 Test Reports 
+ 
+system is ready for deployment in an educational environment.  
+testing. It met all  functional, performance, and  usability requirements, confirming  that the 
+The  Student  Result  Management  System  performed  efficiently  and  accurately  during 
+Result: 
+ 
+• 
+Stable system performance during concurrent access. 
+• 
+Secure data access (students can only view their own results). 
+• 
+Proper error messages for invalid inputs. 
+• 
+Real-time result updates after admin modifications. 
+• 
+Data integrity across modules. 
+System Behaviors Validated: 
+ 
+ 
+reports for both admin and student use. 
+• 
+Report  Generation:  Verified  the  generation  of  well-formatted  printable 
+their roll numbers and login credentials. 
+• 
+Student Result View: Checked accurate display of student results based on 
+accuracy. 
+• 
+Result  Management:  Tested  result  entry,  grade  calculation,  and  retrieval 
+displayed correctly and linked with student data. 
+• 
+Course  Management:  Ensured  that  all  course-related  information  was 
+and delete records successfully. 
+• 
+Student Management:  Confirmed  that  administrators  could  add,  update, 
+users, including validation for incorrect credentials. 
+• 
+Login and Authentication: Verified secure login for admin and student 
+Key Functional Areas Tested: 
+----------------Page (41) Break----------------
+                                                                                                  40 
+route 
+unauthorized                    redirects to login 
+TC_008                   Attempt to view                     Access denied,                    Passed 
+record                        deleted 
+TC_007                      Delete student                 Student data                            Passed 
+uploads material                    saved to DB 
+TC_006                       Faculty                               File stored and URL           Passed 
+marks                             individual result 
+TC_005                    Student views                      Displays correct                   Passed 
+attendance                       calculated 
+Faculty enters                  Attendance saved and 
+TC_004                                                                                                              Passed 
+student                              DB 
+adds new                          successfully to 
+TC_003                         Admin                             Student added                        Passed 
+----------------Page (42) Break----------------
+                                                                                                  41 
+Conclusion 
+Chapter-9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (43) Break----------------
+                                                                                                  42 
+departments as the institution grows. 
+reliable.  The  system  can  easily  be  scaled  to  support  more  courses,  semesters,  and 
+repetitive  tasks,  minimizing  workload,  and  ensuring  that  data  remains  consistent  and 
+Overall,   Campusnest    enhances    institutional    productivity    by    automating 
+academic information.  
+of  the  MERN  stack  ensures  structured  storage,  fast  execution,  and  quick  access  to 
+system  data, while students  can  securely  view  their  individual  results  anytime. The  use 
+By  providing  role -based  access,  administrators  have  complete  control  over 
+allows faculty to quickly update student performance records. 
+data retrieval.  It  eliminates  manual  errors commonly  found  in  paper-based  systems  and 
+functionalities  such  as  user  registration,  course  management,  marks  entry,  and  secure 
+The  system  ensures  data  accuracy,  security,  and  transparency  by  integrating 
+web-based interface accessible to administrators, faculty, and students.. 
+result  processing,  attendance  management,  and  material  sharing  through  an  intuitive 
+platform  for  managing  academic  records  within  educational  institutions.  It  simplifies 
+The  Campusnest  ERP  System  provides  an  efficient,  secure,  and  automated 
+ 
+9. Conclusion 
+----------------Page (44) Break----------------
+                                                                                                  43 
+Limitations  
+Chapter  -10 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (45) Break----------------
+                                                                                                  44 
+CSS; a dedicated native mobile version is not yet implemented. 
+Currently optimized only for desktop and mobile browsers via responsive 
+•   No Mobile Application: 
+ 
+time for large batches without bulk import tools. 
+Student and result data must be entered manually, which may take 
+•   Manual Data Entry: 
+ 
+trends or visual charting comparisons. 
+The system does not yet provide advanced analytical tools for performance 
+•   Limited Analytics: 
+ 
+departments, lacking a multi-tenant architecture.. 
+The system is currently designed for use within one college or specific 
+•   Single Institution Scope: 
+ 
+synchronization between the React client and Node.js server. 
+Online    access    is    required    for    real-time    updates    and    data 
+•   Internet Dependency: 
+ 
+10. Limitations 
+----------------Page (46) Break----------------
+                                                                                                  45 
+Scope of Enhancement  
+Chapter  -11 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (47) Break----------------
+                                                                                                  46 
+later via Service Workers. 
+Allow limited system use during network outages with local data synchronization 
+• 
+Offline Access Mode: 
+ 
+risk based on attendance trends. 
+Implement  algorithms  to  predict  academic  performance  or  identify  students  at 
+• 
+AI-Based Insights: 
+ 
+Allow bulk uploading of student and marks data from Excel or CSV files. 
+• 
+Import/Export Functionality: 
+ 
+and push notifications.. 
+Develop  Android  and  iOS  versions  using  React  Native  for  better  accessibility 
+• 
+Mobile App Integration: 
+ 
+published. 
+Notify  students  automatically  when  results  or  new  attendance  warnings  are 
+• 
+Email/SMS Notifications: 
+ 
+and subject-wise statistics graphically. 
+Integrate  data  visualization  tools  (like  Recharts)  to  display  performance  trends 
+• 
+Automated Result Analysis: 
+ 
+11. Scope for Enhancement 
+----------------Page (48) Break----------------
+                                                                                                  47 
+Abbreviations  and Acronyms  
+Chapter  -12 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (49) Break----------------
+                                                                                                  48 
+VS Code        Visual Studio Code 
+URL               Uniform  Resource  Locator  
+UI                   User  Interface  
+UG                 Undergraduate  
+SQL                Structured  Query  Language 
+SMS               Short  Message  Service 
+SRMS             Student  Result  Management  System 
+SGPA             Semester  Grade  Point  Average 
+RA                  Research  Assistant (if  applicable)  
+PG                  Postgraduate  
+PDF                Portable Document Format 
+management system) 
+MongoDB       My Structured Query Language (relational database 
+IDE                 Integrated  Development  Environment  
+HTTP             Hypertext  Transfer  Protocol  
+HTML5          HyperText  Markup  Language  version  5 
+HTML            HyperText  Markup  Language  
+React              Micro  web framework  for  Python  
+DFD               Data  Flow  Diagram  
+DB                  Database  
+CSV               Comma -Separated  Values  
+CFD               Context  Flow  Diagram  
+CSS3              Cascading  Style  Sheets  version  3 
+CSS                Cascading  Style  Sheets  
+CRUD            Create,  Read,  Update,  Delete  
+CGPA             Cumulative  Grade  Point  Average  
+API                 Application  Programming  Interface  
+Admin            Administrator  
+AI                   Artificial  Intelligence  
+Acronym       Full Form 
+ 
+12. Abbreviations and Acronyms 
+----------------Page (50) Break----------------
+                                                                                                  49 
+Bibliography  / References  
+Chapter  -13 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (51) Break----------------
+                                                                                                  50 
+ 
+ 
+ 
+ 
+https://www.youtube.com/ 
+8.  YouTube : 
+ 
+https://code.visualstudio.com/ 
+7.  VS Code (Visual Studio Code) : 
+ 
+https://www.python.org/ 
+6.  Python : 
+ 
+https://www.mongoDB.com/products/workbench/ 
+5.  MongoDB Workbench : 
+ 
+https://gemini.google.com/ 
+4.  Gemini : 
+ 
+https://React.palletsprojects.com/ 
+3.  React (Python Web Framework) : 
+ 
+https://chatgpt.com/ 
+2.  ChatGPT : 
+ 
+https://getbootstrap.com/ 
+1.  Bootstrap : 
+ 
+ 
+ 
+13. Bibliography / References 
+----------------Page (52) Break----------------
+ 
+54 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+----------------Page (53) Break----------------
