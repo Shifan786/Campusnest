@@ -10,11 +10,11 @@ import ForgotPassword from './pages/ForgotPassword';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminCourses from './pages/admin/AdminCourses';
+import AdminSubjects from './pages/admin/AdminSubjects';
 import AdminNotices from './pages/admin/AdminNotices';
 import AdminEnrollments from './pages/admin/AdminEnrollments';
 import FacultyDashboard from './pages/faculty/FacultyDashboard';
 import FacultyClasses from './pages/faculty/FacultyClasses';
-import FacultyAvailableClasses from './pages/faculty/FacultyAvailableClasses';
 import FacultyAttendance from './pages/faculty/FacultyAttendance';
 import FacultyMarks from './pages/faculty/FacultyMarks';
 import StudentDashboard from './pages/student/StudentDashboard';
@@ -62,6 +62,11 @@ const App = () => {
                             <AdminCourses />
                         </ProtectedRoute>
                     } />
+                    <Route path="/admin/subjects" element={
+                        <ProtectedRoute allowedRoles={['Admin']}>
+                            <AdminSubjects />
+                        </ProtectedRoute>
+                    } />
                     <Route path="/admin/notices" element={
                         <ProtectedRoute allowedRoles={['Admin']}>
                             <AdminNotices />
@@ -81,11 +86,6 @@ const App = () => {
                     <Route path="/faculty/classes" element={
                         <ProtectedRoute allowedRoles={['Faculty', 'Admin']}>
                             <FacultyClasses />
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/faculty/available-classes" element={
-                        <ProtectedRoute allowedRoles={['Faculty', 'Admin']}>
-                            <FacultyAvailableClasses />
                         </ProtectedRoute>
                     } />
                     <Route path="/faculty/attendance" element={

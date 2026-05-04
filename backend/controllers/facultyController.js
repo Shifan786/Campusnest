@@ -337,6 +337,28 @@ const claimSubject = async (req, res) => {
     }
 };
 
+const unclaimSubject = async (req, res) => {
+    try {
+        const subject = await Subject.findById(req.params.id);
+        if (!subject) {
+            return res.status(404).json({ message: 'Subject not found' });
+        }
+
+        // Only block if faculty is explicitly set to a DIFFERENT user
+        if (subject.faculty && subject.faculty.toString() !== req.user._id.toString()) {
+            return res.status(401).json({ message: 'Not authorized to unclaim this subject' });
+        }
+        
+        // Remove faculty and clear timings so the new teacher can make their own schedule
+        subject.faculty = null;
+        subject.timings = [];
+        await subject.save();
+        res.json({ message: 'Subject unclaimed successfully', subject });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 const getCourses = async (req, res) => {
     try {
         const courses = await Course.find({});
@@ -348,17 +370,82 @@ const getCourses = async (req, res) => {
 
 const createSubject = async (req, res) => {
     try {
-        const { name, code, course, semester, timing } = req.body;
+        const { name, code, course, semester } = req.body;
         const subject = new Subject({ 
             name, 
             code, 
             course, 
             faculty: req.user._id, 
             semester,
-            timing: timing || "TBD"
+            timings: []
         });
         const createdSubject = await subject.save();
         res.status(201).json(createdSubject);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const addTiming = async (req, res) => {
+    try {
+        const { subjectId } = req.params;
+        const { timingSlot } = req.body; // e.g. "Monday 09:00 AM - 10:00 AM"
+
+        const targetSubject = await Subject.findById(subjectId);
+        if (!targetSubject) {
+            return res.status(404).json({ message: 'Subject not found' });
+        }
+
+        if (targetSubject.faculty.toString() !== req.user._id.toString()) {
+            return res.status(401).json({ message: 'Not authorized to modify this subject schedule' });
+        }
+
+        // Teacher Conflict Check
+        const teacherConflict = await Subject.findOne({
+            faculty: req.user._id,
+            timings: timingSlot
+        });
+
+        if (teacherConflict) {
+            return res.status(400).json({ message: `You are already teaching another class (${teacherConflict.name}) at this time.` });
+        }
+
+        // Student Conflict Check
+        const studentConflict = await Subject.findOne({
+            course: targetSubject.course,
+            semester: targetSubject.semester,
+            timings: timingSlot
+        });
+
+        if (studentConflict) {
+            return res.status(400).json({ message: `The students already have ${studentConflict.name} scheduled at this time.` });
+        }
+
+        targetSubject.timings.push(timingSlot);
+        await targetSubject.save();
+        res.json(targetSubject);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const removeTiming = async (req, res) => {
+    try {
+        const { subjectId } = req.params;
+        const { timingSlot } = req.body;
+
+        const targetSubject = await Subject.findById(subjectId);
+        if (!targetSubject) {
+            return res.status(404).json({ message: 'Subject not found' });
+        }
+
+        if (targetSubject.faculty.toString() !== req.user._id.toString()) {
+            return res.status(401).json({ message: 'Not authorized to modify this subject schedule' });
+        }
+
+        targetSubject.timings = targetSubject.timings.filter(t => t !== timingSlot);
+        await targetSubject.save();
+        res.json(targetSubject);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -377,4 +464,4 @@ const deleteSubject = async (req, res) => {
     }
 };
 
-module.exports = { getAssignedSubjects, getStudentsByCourse, markAttendance, uploadMarks, getUploadedMarks, updateMarks, deleteMarks, markBulkAttendance, getAttendanceHistory, getAttendanceDetails, getDashboardStats, getNotices, getAvailableSubjects, claimSubject, getCourses, createSubject, deleteSubject };
+module.exports = { getAssignedSubjects, getStudentsByCourse, markAttendance, uploadMarks, getUploadedMarks, updateMarks, deleteMarks, markBulkAttendance, getAttendanceHistory, getAttendanceDetails, getDashboardStats, getNotices, getAvailableSubjects, claimSubject, unclaimSubject, getCourses, createSubject, deleteSubject, addTiming, removeTiming };

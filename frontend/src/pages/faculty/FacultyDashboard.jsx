@@ -9,20 +9,7 @@ const FacultyDashboard = () => {
     const [stats, setStats] = useState(null);
     const [schedule, setSchedule] = useState([]);
 
-    const handleDeleteSubject = async (subjectId) => {
-        if (!window.confirm("Are you sure you want to permanently delete this class from your schedule?")) return;
-        try {
-            const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
-            const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.delete(`http://localhost:5000/api/faculty/subjects/${subjectId}`, config);
-            setSchedule(prev => prev.filter(s => s._id !== subjectId));
-            
-            const { data: statsData } = await axios.get('http://localhost:5000/api/faculty/dashboard-stats', config);
-            setStats(statsData);
-        } catch (error) {
-            alert(error.response?.data?.message || 'Failed to delete class');
-        }
-    };
+    // Delete functionality is removed here since dropping subjects is now handled securely in 'My Classes'
 
     useEffect(() => {
         const fetchData = async () => {
@@ -34,17 +21,34 @@ const FacultyDashboard = () => {
                 setStats(statsData);
 
                 const { data: subjectsData } = await axios.get('http://localhost:5000/api/faculty/subjects', config);
-                const formattedSchedule = subjectsData.map((sub) => {
-                    return {
-                        _id: sub._id,
-                        title: `${sub.code} ${sub.name}`,
-                        time: sub.timing || "TBD",
-                        status: "Upcoming"
-                    };
+                
+                const todayDayName = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+                const todaysTimetable = [];
+                
+                subjectsData.forEach(sub => {
+                    if (sub.timings && sub.timings.length > 0) {
+                        sub.timings.forEach(t => {
+                            if (t.startsWith(todayDayName)) {
+                                todaysTimetable.push({
+                                    _id: sub._id,
+                                    title: `${sub.code} ${sub.name}`,
+                                    time: t.replace(todayDayName, '').trim(),
+                                    status: "Upcoming"
+                                });
+                            }
+                        });
+                    } else if (sub.timing && sub.timing.startsWith(todayDayName)) {
+                        todaysTimetable.push({
+                            _id: sub._id,
+                            title: `${sub.code} ${sub.name}`,
+                            time: sub.timing.replace(todayDayName, '').trim(),
+                            status: "Upcoming"
+                        });
+                    }
                 });
                 
-                setSchedule(formattedSchedule.length > 0 ? formattedSchedule : [
-                    { title: 'No classes scheduled today', time: '--:--', status: 'Upcoming' }
+                setSchedule(todaysTimetable.length > 0 ? todaysTimetable : [
+                    { title: 'No classes scheduled today', time: '--:--', status: 'Upcoming', _id: null }
                 ]);
             } catch (error) {
                 console.error(error);
@@ -98,15 +102,6 @@ const FacultyDashboard = () => {
                                 <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 shadow-sm hover:shadow-md transition-all">
                                     <div className="flex items-center justify-between mb-2">
                                         <h3 className="font-extrabold text-slate-900 dark:text-white text-lg tracking-tight">{item.title}</h3>
-                                        {item._id && (
-                                            <button 
-                                                onClick={() => handleDeleteSubject(item._id)}
-                                                className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
-                                                title="Delete Class"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
-                                        )}
                                     </div>
                                     <div className="text-slate-500 dark:text-slate-400 text-sm font-bold tracking-wide">{item.time}</div>
                                 </div>
@@ -118,7 +113,7 @@ const FacultyDashboard = () => {
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="card-base p-6 lg:p-8">
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Quick Tools</h2>
                     <div className="flex flex-col gap-4">
-                        <Link to="/faculty/available-classes" className="btn-primary bg-indigo-500 hover:bg-indigo-600 shadow-indigo-500/20 focus:ring-indigo-100 dark:focus:ring-indigo-900 justify-start py-4 text-base"><BookOpen className="w-5 h-5 mr-3 opacity-70"/> Select Class to Take</Link>
+                        <Link to="/faculty/classes" className="btn-primary bg-indigo-500 hover:bg-indigo-600 shadow-indigo-500/20 focus:ring-indigo-100 dark:focus:ring-indigo-900 justify-start py-4 text-base"><BookOpen className="w-5 h-5 mr-3 opacity-70"/> View / Claim Classes</Link>
                         <Link to="/faculty/classes" className="btn-primary bg-blue-500 hover:bg-blue-600 shadow-blue-500/20 focus:ring-blue-100 dark:focus:ring-blue-900 justify-start py-4 text-base"><Users className="w-5 h-5 mr-3 opacity-70"/> View Enrolled Students</Link>
                         <Link to="/faculty/attendance" className="btn-primary bg-sky-500 hover:bg-sky-600 shadow-sky-500/20 focus:ring-sky-100 dark:focus:ring-sky-900 justify-start py-4 text-base"><CheckCircle2 className="w-5 h-5 mr-3 opacity-70"/> Mark Bulk Attendance</Link>
                         <Link to="/faculty/marks" className="btn-primary bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20 focus:ring-emerald-100 dark:focus:ring-emerald-900 justify-start py-4 text-base"><FileText className="w-5 h-5 mr-3 opacity-70"/> Upload Exam Marks</Link>

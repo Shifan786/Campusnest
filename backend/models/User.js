@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
     // Optional specific fields depending on role:
     enrollmentNumber: { type: String }, // For Students
     course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' }, // Automatically binds them to a specific program
+    academicYear: { type: Number }, // e.g. 1 = 1st Year, 2 = 2nd Year, etc.
     enrollmentStatus: { type: String, enum: ['None', 'Pending', 'Approved', 'Rejected'], default: 'None' },
     employeeId: { type: String }, // For Faculty
     department: { type: String }, 

@@ -14,6 +14,7 @@ const StudentDashboard = () => {
     const [enrollmentData, setEnrollmentData] = useState({ status: 'Loading', course: null });
     const [courses, setCourses] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState('');
+    const [selectedAcademicYear, setSelectedAcademicYear] = useState(1);
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
@@ -53,7 +54,7 @@ const StudentDashboard = () => {
         try {
             const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.post('http://localhost:5000/api/student/enroll', { courseId: selectedCourse }, config);
+            const { data } = await axios.post('http://localhost:5000/api/student/enroll', { courseId: selectedCourse, academicYear: selectedAcademicYear }, config);
             setEnrollmentData({ status: data.enrollmentStatus, course: data.course });
         } catch (error) {
             alert('Failed to submit enrollment');
@@ -69,6 +70,21 @@ const StudentDashboard = () => {
         { name: 'Absent', value: absent > 0 ? absent : 0.0001 }, // rendering trick for recharts
     ];
     const COLORS = ['#10b981', '#f43f5e'];
+
+    const todayDayName = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    
+    const todaysTimetable = [];
+    timetable.forEach(sub => {
+        if (sub.timings && sub.timings.length > 0) {
+            sub.timings.forEach(t => {
+                if (t.startsWith(todayDayName)) {
+                    todaysTimetable.push({ ...sub, currentTiming: t });
+                }
+            });
+        } else if (sub.timing && sub.timing.startsWith(todayDayName)) {
+            todaysTimetable.push({ ...sub, currentTiming: sub.timing });
+        }
+    });
 
     if (enrollmentData.status === 'Loading') return <DashboardLayout title="Student Hub"><div className="p-8 text-center text-slate-500 font-medium animate-pulse">Loading profile...</div></DashboardLayout>;
 
@@ -94,8 +110,7 @@ const StudentDashboard = () => {
                                 <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">Select Your Program</h2>
                                 <p className="text-slate-500 mt-2 text-sm font-medium">Choose from our available academic programs to request enrollment.</p>
                             </div>
-                            
-                            <form onSubmit={handleEnroll} className="space-y-6">
+                            <form onSubmit={handleEnroll} className="space-y-5">
                                 <div>
                                     <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Available Courses</label>
                                     <select 
@@ -106,6 +121,23 @@ const StudentDashboard = () => {
                                     >
                                         <option value="" disabled>-- Select a course --</option>
                                         {courses.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Academic Year</label>
+                                    <select
+                                        className="w-full p-3.5 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-medium"
+                                        value={selectedAcademicYear}
+                                        onChange={e => setSelectedAcademicYear(Number(e.target.value))}
+                                        required
+                                    >
+                                        {(() => {
+                                            const course = courses.find(c => c._id === selectedCourse);
+                                            const maxYears = course ? Math.ceil((course.totalSemesters || 8) / 2) : 4;
+                                            return Array.from({ length: maxYears }, (_, i) => i + 1).map(y => (
+                                                <option key={y} value={y}>{y === 1 ? '1st' : y === 2 ? '2nd' : y === 3 ? '3rd' : `${y}th`} Year</option>
+                                            ));
+                                        })()}
                                     </select>
                                 </div>
                                 <button type="submit" disabled={submitting || !selectedCourse} className="w-full btn-primary py-4 text-lg shadow-indigo-500/30">
@@ -200,12 +232,12 @@ const StudentDashboard = () => {
                     </div>
                     
                     <div className="space-y-4">
-                        {timetable.length > 0 ? (
-                            timetable.map((subject, index) => (
+                        {todaysTimetable.length > 0 ? (
+                            todaysTimetable.map((subject, index) => (
                                 <div key={subject._id || index} className="flex flex-col sm:flex-row gap-4 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800/40 hover:shadow-lg transition-all group">
                                     <div className="flex flex-col justify-center items-center p-3 bg-slate-50 dark:bg-slate-800 rounded-xl min-w-[100px] border border-slate-100 dark:border-slate-700">
                                         <Clock className="w-5 h-5 text-slate-400 mb-1" />
-                                        <span className="text-xs font-bold text-slate-600 dark:text-slate-300 text-center">{subject.timing || 'TBD'}</span>
+                                        <span className="text-xs font-bold text-slate-600 dark:text-slate-300 text-center">{subject.currentTiming.replace(todayDayName, '').trim() || 'TBD'}</span>
                                     </div>
                                     <div className="flex flex-col justify-center flex-1">
                                         <h3 className="font-extrabold text-slate-900 dark:text-white text-lg">{subject.name}</h3>

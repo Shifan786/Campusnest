@@ -15,6 +15,7 @@ const FacultyMarks = () => {
     const [isAbsent, setIsAbsent] = useState(false);
     const [message, setMessage] = useState('');
     const [uploadedMarks, setUploadedMarks] = useState([]);
+    const [filterExamType, setFilterExamType] = useState('');
     const [editMarkId, setEditMarkId] = useState(null);
     const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
@@ -28,6 +29,7 @@ const FacultyMarks = () => {
                 setSubjects(subRes.data);
                 if (subRes.data.length > 0) {
                     setSelectedSubject(subRes.data[0]._id);
+                    setSemester(subRes.data[0].semester || '');
                     fetchStudents(subRes.data[0].course?._id || subRes.data[0].course, config);
                 }
                 fetchUploadedMarks();
@@ -67,8 +69,10 @@ const FacultyMarks = () => {
         const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
         const config = { headers: { Authorization: `Bearer ${token}` } };
         if (sub && sub.course) {
+            setSemester(sub.semester || '');
             fetchStudents(sub.course._id || sub.course, config);
         } else {
+            setSemester('');
             setStudents([]);
             setSelectedStudent('');
         }
@@ -184,10 +188,10 @@ const FacultyMarks = () => {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Semester</label>
-                            <select required value={semester} onChange={e => setSemester(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:text-gray-400" disabled={!!editMarkId}>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Semester (Auto-filled)</label>
+                            <select required value={semester} onChange={e => setSemester(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 text-gray-500 cursor-not-allowed" disabled>
                                 <option value="" disabled>Select Semester</option>
-                                {[1,2,3,4,5,6,7,8].map(sem => <option key={sem} value={sem}>Semester {sem}</option>)}
+                                {[1,2,3,4,5,6,7,8,9,10].map(sem => <option key={sem} value={sem}>Semester {sem}</option>)}
                             </select>
                         </div>
                     </div>
@@ -222,9 +226,24 @@ const FacultyMarks = () => {
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 mt-8 overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-100 flex items-center bg-gray-50">
-                    <FileText className="w-5 h-5 mr-2 text-indigo-600" />
-                    <h2 className="text-lg font-semibold text-gray-800">Uploaded Marks</h2>
+                <div className="px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between bg-gray-50 gap-4">
+                    <div className="flex items-center">
+                        <FileText className="w-5 h-5 mr-2 text-indigo-600" />
+                        <h2 className="text-lg font-semibold text-gray-800">Uploaded Marks</h2>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                        <label className="text-sm font-medium text-gray-700">Filter View:</label>
+                        <select 
+                            value={filterExamType} 
+                            onChange={(e) => setFilterExamType(e.target.value)}
+                            className="p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium text-gray-700"
+                        >
+                            <option value="">-- Select Exam Type --</option>
+                            <option value="1st internal">1st internal</option>
+                            <option value="2nd internal">2nd internal</option>
+                            <option value="Sem exam">Sem exam</option>
+                        </select>
+                    </div>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
@@ -240,10 +259,12 @@ const FacultyMarks = () => {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {uploadedMarks.length === 0 ? (
-                                <tr><td colSpan="6" className="px-6 py-4 text-center text-gray-500">No marks uploaded yet.</td></tr>
+                            {filterExamType === '' ? (
+                                <tr><td colSpan="7" className="px-6 py-10 text-center text-gray-500 font-medium">Please select an exam type to view uploaded marks.</td></tr>
+                            ) : uploadedMarks.filter(m => m.examName === filterExamType).length === 0 ? (
+                                <tr><td colSpan="7" className="px-6 py-10 text-center text-gray-500">No marks uploaded for this exam type yet.</td></tr>
                             ) : (
-                                uploadedMarks.map((record) => (
+                                uploadedMarks.filter(m => m.examName === filterExamType).map((record) => (
                                     <tr key={record._id}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{record.student?.name}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.subject?.name}</td>

@@ -61,13 +61,13 @@ const DashboardLayout = ({ children, title, subtitle }) => {
                     { name: 'Overview', icon: LayoutDashboard, path: '/admin' },
                     { name: 'Users', icon: Users, path: '/admin/users' },
                     { name: 'Courses', icon: BookOpen, path: '/admin/courses' },
+                    { name: 'Subjects', icon: FileText, path: '/admin/subjects' },
                     { name: 'Enrollments', icon: UserPlus, path: '/admin/enrollments' },
                     { name: 'Notices', icon: Bell, path: '/admin/notices' },
                 ];
             case 'Faculty':
                 return [
                     { name: 'Dashboard', icon: LayoutDashboard, path: '/faculty' },
-                    { name: 'Available Classes', icon: BookOpen, path: '/faculty/available-classes' },
                     { name: 'My Classes', icon: Users, path: '/faculty/classes' },
                     { name: 'Attendance', icon: Clock, path: '/faculty/attendance' },
                     { name: 'Marks', icon: FileText, path: '/faculty/marks' },

@@ -118,14 +118,69 @@ const updateCourse = async (req, res) => {
     }
 };
 
-// @desc    Create a subject
+// @desc    Create a subject (Admin defines curriculum)
 // @route   POST /api/admin/subjects
 // @access  Private/Admin
 const createSubject = async (req, res) => {
-    const { name, code, course, faculty, semester } = req.body;
-    const subject = new Subject({ name, code, course, faculty, semester });
-    const createdSubject = await subject.save();
-    res.status(201).json(createdSubject);
+    try {
+        const { name, code, course, semester, academicYear } = req.body;
+        const existing = await Subject.findOne({ code });
+        if (existing) return res.status(400).json({ message: `Subject with code '${code}' already exists.` });
+        const subject = new Subject({ name, code, course, semester, academicYear: Number(academicYear) || 1 });
+        const createdSubject = await subject.save();
+        const populated = await Subject.findById(createdSubject._id).populate('course');
+        res.status(201).json(populated);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Get all subjects
+// @route   GET /api/admin/subjects
+// @access  Private/Admin
+const getSubjects = async (req, res) => {
+    try {
+        const filter = {};
+        if (req.query.course) filter.course = req.query.course;
+        if (req.query.academicYear) filter.academicYear = Number(req.query.academicYear);
+        const subjects = await Subject.find(filter).populate('course', 'name').populate('faculty', 'name').sort({ academicYear: 1, semester: 1, name: 1 });
+        res.json(subjects);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Update a subject
+// @route   PUT /api/admin/subjects/:id
+// @access  Private/Admin
+const updateSubject = async (req, res) => {
+    try {
+        const { name, code, semester, academicYear } = req.body;
+        const subject = await Subject.findById(req.params.id);
+        if (!subject) return res.status(404).json({ message: 'Subject not found' });
+        subject.name = name || subject.name;
+        subject.code = code || subject.code;
+        subject.semester = semester || subject.semester;
+        subject.academicYear = academicYear ? Number(academicYear) : subject.academicYear;
+        await subject.save();
+        const populated = await Subject.findById(subject._id).populate('course', 'name').populate('faculty', 'name');
+        res.json(populated);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Delete a subject
+// @route   DELETE /api/admin/subjects/:id
+// @access  Private/Admin
+const deleteSubject = async (req, res) => {
+    try {
+        const subject = await Subject.findByIdAndDelete(req.params.id);
+        if (!subject) return res.status(404).json({ message: 'Subject not found' });
+        res.json({ message: 'Subject deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 // @desc    Create an announcement
@@ -217,6 +272,9 @@ module.exports = {
     getCourses,
     updateCourse,
     createSubject,
+    getSubjects,
+    updateSubject,
+    deleteSubject,
     createAnnouncement,
     getNotices,
     updateAnnouncement,

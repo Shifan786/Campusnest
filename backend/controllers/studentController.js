@@ -71,10 +71,11 @@ const getAvailableCourses = async (req, res) => {
 
 const submitEnrollment = async (req, res) => {
     try {
-        const { courseId } = req.body;
+        const { courseId, academicYear } = req.body;
         
         await require('../models/User').findByIdAndUpdate(req.user._id, {
             course: courseId,
+            academicYear: Number(academicYear) || 1,
             enrollmentStatus: 'Pending'
         });
         

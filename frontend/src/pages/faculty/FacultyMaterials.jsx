@@ -13,6 +13,7 @@ const FacultyMaterials = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [courseId, setCourseId] = useState('');
+    const [academicYear, setAcademicYear] = useState(1);
     const [file, setFile] = useState(null);
     const [error, setError] = useState(null);
 
@@ -55,6 +56,7 @@ const FacultyMaterials = () => {
         formData.append('title', title);
         formData.append('description', description);
         formData.append('course', courseId);
+        formData.append('academicYear', academicYear);
         formData.append('file', file);
 
         try {
@@ -70,6 +72,7 @@ const FacultyMaterials = () => {
             setTitle('');
             setDescription('');
             setCourseId('');
+            setAcademicYear(1);
             setFile(null);
             
             // Refresh list
@@ -145,6 +148,23 @@ const FacultyMaterials = () => {
                         </div>
 
                         <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Academic Year *</label>
+                            <select
+                                value={academicYear}
+                                onChange={e => setAcademicYear(Number(e.target.value))}
+                                className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all dark:text-white"
+                            >
+                                {(() => {
+                                    const course = courses.find(c => c._id === courseId);
+                                    const maxYears = course ? Math.ceil((course.totalSemesters || 8) / 2) : 4;
+                                    return Array.from({ length: maxYears }, (_, i) => i + 1).map(y => (
+                                        <option key={y} value={y}>{y === 1 ? '1st' : y === 2 ? '2nd' : y === 3 ? '3rd' : `${y}th`} Year</option>
+                                    ));
+                                })()}
+                            </select>
+                        </div>
+
+                        <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Description</label>
                             <textarea 
                                 value={description}
@@ -216,7 +236,7 @@ const FacultyMaterials = () => {
                                         </button>
                                     </div>
                                     <h3 className="font-bold text-slate-800 dark:text-white line-clamp-1">{item.title}</h3>
-                                    <p className="text-xs text-indigo-500 dark:text-indigo-400 font-medium mt-1">{item.course?.name}</p>
+                                    <p className="text-xs text-indigo-500 dark:text-indigo-400 font-medium mt-1">{item.course?.name} · {item.academicYear ? `${item.academicYear === 1 ? '1st' : item.academicYear === 2 ? '2nd' : item.academicYear === 3 ? '3rd' : `${item.academicYear}th`} Year` : 'All Years'}</p>
                                     {item.description && (
                                         <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">{item.description}</p>
                                     )}

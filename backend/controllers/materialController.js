@@ -7,7 +7,7 @@ const path = require('path');
 // @access  Private (Faculty)
 exports.uploadMaterial = async (req, res) => {
     try {
-        const { title, description, course } = req.body;
+        const { title, description, course, academicYear } = req.body;
         
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded' });
@@ -18,11 +18,13 @@ exports.uploadMaterial = async (req, res) => {
             description,
             fileUrl: `/uploads/materials/${req.file.filename}`,
             uploadedBy: req.user._id,
-            course
+            course,
+            academicYear: Number(academicYear) || 1
         });
 
         await newMaterial.save();
-        res.status(201).json(newMaterial);
+        const populated = await Material.findById(newMaterial._id).populate('course', 'name totalSemesters');
+        res.status(201).json(populated);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -47,9 +49,17 @@ exports.getMaterialsByFaculty = async (req, res) => {
 // @access  Private (Student)
 exports.getMaterialsForStudent = async (req, res) => {
     try {
-        // Here we could filter by course if the student had a specific course, but currently students just view all materials or filter on frontend
-        // Assuming we return all materials for now.
-        const materials = await Material.find().populate('course', 'name').populate('uploadedBy', 'name');
+        // Filter strictly by the student's course AND academic year
+        const { course, academicYear } = req.user;
+        
+        const filter = {};
+        if (course) filter.course = course;
+        if (academicYear) filter.academicYear = academicYear;
+        
+        const materials = await Material.find(filter)
+            .populate('course', 'name')
+            .populate('uploadedBy', 'name')
+            .sort('-createdAt');
         res.json(materials);
     } catch (error) {
         console.error(error);

@@ -69,8 +69,8 @@ const AdminUsers = () => {
         <Layout>
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-                    <p className="text-gray-500 mt-2">View, add, and remove students and teachers.</p>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">User Management</h1>
+                    <p className="text-gray-500 dark:text-slate-400 mt-2">View, add, and remove students and teachers.</p>
                 </div>
                 <button
                     onClick={() => openModal(activeTab)}
@@ -81,21 +81,21 @@ const AdminUsers = () => {
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-gray-200 mb-6">
+            <div className="flex border-b border-gray-200 dark:border-slate-800 mb-6">
                 {tabs.map(tab => (
                     <button
                         key={tab.key}
                         onClick={() => setActiveTab(tab.key)}
                         className={`flex items-center px-6 py-3 text-sm font-semibold border-b-2 transition-colors mr-2 ${
                             activeTab === tab.key
-                                ? tab.activeColor + ' bg-white'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                ? tab.activeColor + ' bg-white dark:bg-slate-900'
+                                : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 hover:border-gray-300 dark:hover:border-slate-700'
                         }`}
                     >
                         <tab.icon className="w-4 h-4 mr-2" />
                         {tab.label}
                         <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-bold ${
-                            activeTab === tab.key ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600'
+                            activeTab === tab.key ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-400' : 'bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-400'
                         }`}>
                             {tab.count}
                         </span>
@@ -104,26 +104,26 @@ const AdminUsers = () => {
             </div>
 
             {/* Users Table */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-800">
+                    <thead className="bg-gray-50 dark:bg-slate-800/50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Name</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Email</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Status</th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-200 dark:divide-slate-800">
                         {filteredUsers.length === 0 ? (
                             <tr>
-                                <td colSpan="4" className="px-6 py-10 text-center text-gray-500">
+                                <td colSpan="4" className="px-6 py-10 text-center text-gray-500 dark:text-slate-400">
                                     No {activeTab === 'Student' ? 'students' : 'teachers'} found.
                                 </td>
                             </tr>
                         ) : (
                             filteredUsers.map(user => (
-                                <tr key={user._id} className="hover:bg-gray-50 transition-colors">
+                                <tr key={user._id} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
                                             <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm mr-3 ${
@@ -131,10 +131,10 @@ const AdminUsers = () => {
                                             }`}>
                                                 {user.name?.charAt(0).toUpperCase()}
                                             </div>
-                                            <span className="font-medium text-gray-900">{user.name}</span>
+                                            <span className="font-medium text-gray-900 dark:text-white">{user.name}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-gray-500">{user.email}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-slate-400">{user.email}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 py-1 text-xs rounded-full font-medium ${
                                             activeTab === 'Faculty'
@@ -165,21 +165,21 @@ const AdminUsers = () => {
             {/* Add User Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-xl w-full max-w-md shadow-2xl">
-                        <h2 className="text-xl font-bold mb-4">
+                    <div className="bg-white dark:bg-slate-900 p-6 rounded-xl w-full max-w-md shadow-2xl border border-transparent dark:border-slate-800">
+                        <h2 className="text-xl font-bold mb-4 dark:text-white">
                             Add New {formData.role === 'Student' ? 'Student' : 'Teacher'}
                         </h2>
                         <form onSubmit={handleCreate} className="space-y-4">
-                            <input type="text" placeholder="Full Name" required className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500" onChange={e => setFormData({...formData, name: e.target.value})} />
-                            <input type="email" placeholder="Email Address" required className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500" onChange={e => setFormData({...formData, email: e.target.value})} />
-                            <input type="password" placeholder="Password" required className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500" onChange={e => setFormData({...formData, password: e.target.value})} />
-                            <select value={formData.role} className="w-full p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500" onChange={e => setFormData({...formData, role: e.target.value})}>
+                            <input type="text" placeholder="Full Name" required className="w-full p-2 bg-transparent border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" onChange={e => setFormData({...formData, name: e.target.value})} />
+                            <input type="email" placeholder="Email Address" required className="w-full p-2 bg-transparent border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" onChange={e => setFormData({...formData, email: e.target.value})} />
+                            <input type="password" placeholder="Password" required className="w-full p-2 bg-transparent border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" onChange={e => setFormData({...formData, password: e.target.value})} />
+                            <select value={formData.role} className="w-full p-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" onChange={e => setFormData({...formData, role: e.target.value})}>
                                 <option value="Student">Student</option>
                                 <option value="Faculty">Teacher (Faculty)</option>
                                 <option value="Admin">Admin</option>
                             </select>
                             <div className="flex justify-end space-x-2 mt-4">
-                                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition">Cancel</button>
+                                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition">Cancel</button>
                                 <button type="submit" className="px-4 py-2 bg-indigo-600 font-medium text-white rounded-lg shadow-sm hover:bg-indigo-700 transition">Create User</button>
                             </div>
                         </form>
@@ -190,12 +190,12 @@ const AdminUsers = () => {
             {/* Delete Confirm Modal */}
             {deleteConfirmId && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-xl w-full max-w-sm shadow-2xl text-center">
+                    <div className="bg-white dark:bg-slate-900 p-6 rounded-xl w-full max-w-sm shadow-2xl text-center border border-transparent dark:border-slate-800">
                         <Trash2 className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                        <h2 className="text-xl font-bold mb-2">Delete User?</h2>
-                        <p className="text-gray-500 mb-6">Are you sure you want to delete this user? All associated records will be permanently removed.</p>
+                        <h2 className="text-xl font-bold mb-2 dark:text-white">Delete User?</h2>
+                        <p className="text-gray-500 dark:text-slate-400 mb-6">Are you sure you want to delete this user? All associated records will be permanently removed.</p>
                         <div className="flex justify-center space-x-3">
-                            <button onClick={() => setDeleteConfirmId(null)} className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition">Cancel</button>
+                            <button onClick={() => setDeleteConfirmId(null)} className="px-4 py-2 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition">Cancel</button>
                             <button onClick={handleDelete} className="px-4 py-2 bg-red-600 font-medium text-white rounded-lg shadow-sm hover:bg-red-700 transition">Delete</button>
                         </div>
                     </div>
